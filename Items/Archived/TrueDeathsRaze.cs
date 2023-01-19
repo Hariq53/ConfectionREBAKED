@@ -1,16 +1,13 @@
-using System;
 using Terraria;
-using Terraria.Audio;
-using Terraria.GameContent.Creative;
 using Terraria.ID;
 using Terraria.ModLoader;
-using TheConfectionRebirth.Dusts;
-using TheConfectionRebirth.Projectiles;
 
 namespace TheConfectionRebirth.Items.Archived
 {
-	public class TrueDeathsRaze : ModItem {
-		public override void SetStaticDefaults() {
+	public class TrueDeathsRaze : ModItem
+	{
+		public override void SetStaticDefaults()
+		{
 			Terraria.ID.ItemID.Sets.Deprecated[Type] = true;
 		}
 

@@ -1,8 +1,6 @@
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Linq;
-using System.Collections.Generic;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.ModLoader;
@@ -17,7 +15,8 @@ namespace TheConfectionRebirth.Mounts
 			internal static float[] offsets = new float[] { 0, 14, -14 };
 		}
 
-		public override void SetStaticDefaults() {
+		public override void SetStaticDefaults()
+		{
 			MountData.jumpHeight = 20;
 			MountData.acceleration = 0.06f;
 			MountData.jumpSpeed = 4f;
@@ -27,7 +26,7 @@ namespace TheConfectionRebirth.Mounts
 			MountData.fallDamage = 0f;
 			MountData.runSpeed = 15f;
 			MountData.dashSpeed = 10f;
-			MountData.flightTimeMax = 0; 
+			MountData.flightTimeMax = 0;
 
 			MountData.fatigueMax = 0;
 			MountData.buff = ModContent.BuffType<Buffs.RollercycleBuff>();
@@ -49,9 +48,9 @@ namespace TheConfectionRebirth.Mounts
 			MountData.flyingFrameCount = 0;
 			MountData.flyingFrameDelay = 0;
 			MountData.flyingFrameStart = 0;
-			MountData.inAirFrameCount = 0; 
-			MountData.inAirFrameDelay = 0; 
-			MountData.inAirFrameStart = 0; 
+			MountData.inAirFrameCount = 0;
+			MountData.inAirFrameDelay = 0;
+			MountData.inAirFrameStart = 0;
 			MountData.idleFrameCount = 1;
 			MountData.idleFrameDelay = 1;
 			MountData.idleFrameStart = 1;
@@ -60,7 +59,8 @@ namespace TheConfectionRebirth.Mounts
 			MountData.swimFrameDelay = MountData.inAirFrameDelay;
 			MountData.swimFrameStart = MountData.inAirFrameStart;
 
-			if (!Main.dedServ) {
+			if (!Main.dedServ)
+			{
 				MountData.textureWidth = MountData.backTexture.Width() + 20;
 				MountData.textureHeight = MountData.backTexture.Height();
 			}

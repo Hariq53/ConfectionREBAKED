@@ -1,11 +1,9 @@
 using Microsoft.Xna.Framework;
-using Terraria.Audio;
-using TheConfectionRebirth;
-using TheConfectionRebirth.Projectiles;
 using Terraria;
+using Terraria.Audio;
+using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
-using Terraria.DataStructures;
 
 namespace TheConfectionRebirth.Projectiles
 {
@@ -19,13 +17,13 @@ namespace TheConfectionRebirth.Projectiles
 			Projectile.DamageType = DamageClass.Throwing;
 			Projectile.DamageType = DamageClass.Ranged;
 		}
-	
+
 		public override bool TileCollideStyle(ref int width, ref int height, ref bool fallThrough, ref Vector2 hitboxCenterFrac)
 		{
 			fallThrough = false;
 			return true;
 		}
-	
+
 		public override void Kill(int timeLeft)
 		{
 			SoundEngine.PlaySound(SoundID.Item14, Projectile.position);

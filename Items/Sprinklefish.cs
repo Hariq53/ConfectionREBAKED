@@ -7,11 +7,13 @@ namespace TheConfectionRebirth.Items
 {
 	public class Sprinklefish : ModItem
 	{
-		public override void SetStaticDefaults() {
+		public override void SetStaticDefaults()
+		{
 			SacrificeTotal = 1;
 		}
 
-		public override void SetDefaults() {
+		public override void SetDefaults()
+		{
 			Item.questItem = true;
 			Item.maxStack = 1;
 			Item.width = 26;
@@ -20,15 +22,18 @@ namespace TheConfectionRebirth.Items
 			Item.rare = ItemRarityID.Quest;
 		}
 
-		public override bool IsQuestFish() {
+		public override bool IsQuestFish()
+		{
 			return true;
 		}
 
-		public override bool IsAnglerQuestAvailable() {
+		public override bool IsAnglerQuestAvailable()
+		{
 			return Main.hardMode;
 		}
 
-		public override void AnglerQuestChat(ref string description, ref string catchLocation) {
+		public override void AnglerQuestChat(ref string description, ref string catchLocation)
+		{
 			description = Language.GetTextValue("Mods.TheConfectionRebirth.ItemAnglerChat.Sprinklefish");
 			catchLocation = Language.GetTextValue("Mods.TheConfectionRebirth.Common.CaughtInConfectionSF");
 		}

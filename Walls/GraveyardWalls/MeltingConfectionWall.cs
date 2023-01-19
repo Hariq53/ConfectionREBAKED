@@ -5,20 +5,20 @@ using TheConfectionRebirth.Dusts;
 
 namespace TheConfectionRebirth.Walls.GraveyardWalls
 {
-    public class MeltingConfectionWall : ModWall
-    {
-        public override void SetStaticDefaults()
-        {
-            Main.wallHouse[Type] = true;
-            DustType = ModContent.DustType<CreamDust>();
-            AddMapEntry(new Color(124, 123, 111));
+	public class MeltingConfectionWall : ModWall
+	{
+		public override void SetStaticDefaults()
+		{
+			Main.wallHouse[Type] = true;
+			DustType = ModContent.DustType<CreamDust>();
+			AddMapEntry(new Color(124, 123, 111));
 
-            ItemDrop = ModContent.ItemType<Items.Placeable.MeltingConfectionWall>();
-        }
+			ItemDrop = ModContent.ItemType<Items.Placeable.MeltingConfectionWall>();
+		}
 
-        public override void NumDust(int i, int j, bool fail, ref int num)
-        {
-            num = fail ? 1 : 3;
-        }
-    }
+		public override void NumDust(int i, int j, bool fail, ref int num)
+		{
+			num = fail ? 1 : 3;
+		}
+	}
 }

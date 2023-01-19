@@ -1,9 +1,8 @@
-using TheConfectionRebirth.Items;
-using TheConfectionRebirth.Projectiles;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using TheConfectionRebirth.Items.Placeable;
+using TheConfectionRebirth.Projectiles;
 
 namespace TheConfectionRebirth.Items.Weapons
 {
@@ -13,7 +12,7 @@ namespace TheConfectionRebirth.Items.Weapons
 		{
 			SacrificeTotal = 1;
 		}
-	
+
 		public override void SetDefaults()
 		{
 			Item.damage = 38;
@@ -33,8 +32,9 @@ namespace TheConfectionRebirth.Items.Weapons
 			Item.shoot = ModContent.ProjectileType<RockCandy>();
 			Item.shootSpeed = 16f;
 		}
-	
-		public override void AddRecipes() {
+
+		public override void AddRecipes()
+		{
 			CreateRecipe()
 				.AddIngredient<Saccharite>(30)
 				.AddIngredient<SoulofDelight>(15)

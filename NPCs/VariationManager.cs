@@ -2,6 +2,7 @@
 using ReLogic.Content;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Terraria;
@@ -9,143 +10,119 @@ using Terraria.ModLoader;
 
 namespace TheConfectionRebirth.NPCs
 {
-	public static class VariationManager<T> where T : ModNPC
+	/// <summary>
+	/// Helper class to manage texture variations for NPCs
+	/// </summary>
+	/// <typeparam name="T">The type of the NPC desired to be managed</typeparam>
+	static class VariationsManager<T> where T : ModNPC
 	{
-		private static readonly Func<bool> AlwaysTrue = () => true;
-		private static Dictionary<string, VariationGroup> groups = new();
-		private static List<VariationGroup> groups2 = new();
-		private static List<string> groups3 = new();
-		private static List<string> groupsThatForNormal = new();
-		public static int Count => groups.Count;
+		private static readonly Dictionary<Type, List<NPCVariation>> _db = new();
 
-		public static void AddGroup(string groupName, Asset<Texture2D> asset, Func<bool> condition = null)
+		public static void AddVariation(NPCVariation variation)
 		{
-			if (groups == null)
+			List<NPCVariation> variationsList;
+
+			if (!_db.TryGetValue(typeof(T), out variationsList!))
 			{
-				groups = new();
-				groups2 = new();
-				groups3 = new();
+				variationsList = new();
+				_db.Add(typeof(T), variationsList);
 			}
+			/*
+			 * At this point variationsList will either be a new list
+			 * or the one that already existed in the dictionary (outputted by TryGetValue)
+			 */
 
-			if (groups?.ContainsKey(groupName) == false && !groups.Any(x => x.Value.Index == Count))
+			variationsList.Add(variation);
+		}
+
+		public static List<NPCVariation> AllVariations
+		{
+			get
 			{
-				if (condition == null)
-				{
-					condition ??= AlwaysTrue;
-					if (groupsThatForNormal == null)
-						groupsThatForNormal = new();
-
-					groupsThatForNormal.Add(groupName);
-				}
-
-				VariationGroup group = new(groupName, condition, asset)
-				{
-					Index = (sbyte)Count
-				};
-				if (group.Index == -1)
-					throw new NotFiniteNumberException($"Too many variations have been added to {typeof(T).Name}!");
-				groups.Add(groupName, group);
-				groups2.Add(group);
-				groups3.Add(groupName);
-			}
-			else if (asset != null && groups3.Contains(groupName))
-			{
-				groups?[groupName].Add(asset);
-				groups2?[groups3.IndexOf(groupName)].Add(asset);
+				_db.TryGetValue(typeof(T), out var variationsList);
+				return variationsList ?? new();
 			}
 		}
 
-		public static (VariationGroup group, string groupName, Asset<Texture2D> asset) GetRandom()
+		/// <summary>
+		/// Shorthand for AllVariations.Count
+		/// </summary>
+		public static int VariationsCount => AllVariations.Count;
+
+		public static List<NPCVariation> AvailableVariations
 		{
-			List<VariationGroup> normalGroups = new();
-			List<VariationGroup> otherGroups = new();
-			foreach (var g in groupsThatForNormal)
-				normalGroups.Add(groups[g]);
-			if (normalGroups.Count == 0)
-				throw new InvalidOperationException();
-			else if (normalGroups.Count == Count)
-				goto skip;
-
-			foreach (var g in groups)
+			get
 			{
-				if (groupsThatForNormal.Contains(g.Key))
-					continue;
-
-				if (g.Value)
-					otherGroups.Add(g.Value);
+				var variations = AllVariations;
+				return (from variation in variations
+					   where variation.ConditionIsMet
+					   select variation).ToList();
 			}
-
-		skip:
-			VariationGroup ourGroup;
-			if (otherGroups.Count > 0)
-			{
-				ourGroup = Main.rand.Next(otherGroups);
-				goto ret;
-			}
-
-			ourGroup = Main.rand.Next(normalGroups);
-
-		ret:
-			return (ourGroup, ourGroup, ourGroup.Get());
 		}
 
-		public static VariationGroup GetRandomGroup() => GetRandom().group;
-
-		public static Asset<Texture2D> GetRandomAsset() => GetRandom().asset;
-
-		public static VariationGroup GetByIndex(int index) => groups2[index];
-
-		public static void Clear()
+		/// <summary>
+		/// Returns a random variation of the NPC, selecting only from the ones which condition
+		/// is met at the moment of the method call
+		/// </summary>
+		/// <param name="index">A unique number identifying the picked variation, will be -1 in all
+		/// cases in which a valid variation can't be returned</param>
+		/// <returns>An NPCVariation object containing information about the drawn variation,
+		/// null in every case where no variations are available (e.g. when none have their
+		/// condition satisfied)</returns>
+		public static NPCVariation? GetRandomVariation(out int index)
 		{
-			groupsThatForNormal?.Clear();
-			groupsThatForNormal = null;
-			groups?.Clear();
-			groups = null;
-			groups2?.Clear();
-			groups2 = null;
-			groups3?.Clear();
-			groups3 = null;
+			index = -1;
+			var variations = AvailableVariations;
+			if (variations.Count == 0)
+				return null;
+			index = Main.rand.Next(variations.Count);
+			return variations[index];
 		}
+
+		/// <summary>
+		/// Returns a variation of the NPC at the specified index
+		/// </summary>
+		/// <param name="index">A unique number identifying the desired variation</param>
+		/// <returns>An NPCVariation object containing information about the desired variation,
+		/// null in every case where no variations are available or the index is invalid</returns>
+		public static NPCVariation? GetVariationByIndex(int index)
+		{
+			try
+			{
+				return AllVariations[index];
+			}
+			catch (IndexOutOfRangeException)
+			{
+				return null;
+			}
+		}
+
+		public static void ClearVariations() => _db.Remove(typeof(T));
 	}
 
-	public struct VariationGroup
+	public class NPCVariation
 	{
-		private readonly string name;
-		private Asset<Texture2D> assets;
-		private readonly Func<bool> condition;
+		public string Name { get; init; }
 
-		public sbyte Index { get; internal set; }
+		public Asset<Texture2D> Texture { get; init; }
 
-		public static readonly VariationGroup Empty = default;
+		public Func<bool> Condition { get; init; } = () => true;
 
-		public VariationGroup(string name, Func<bool> condition, Asset<Texture2D> asset)
+		public NPCVariation(string name, Asset<Texture2D> texture)
 		{
-			Index = -1;
-			this.name = name;
-			assets = asset;
-			this.condition = condition;
+			Name = name ?? throw new ArgumentNullException(nameof(name));
+			Texture = texture ?? throw new ArgumentNullException(nameof(texture));
 		}
 
-		public void Add(Asset<Texture2D> asset) => assets = asset;
-
-		public Asset<Texture2D> Get() => assets;
-
-		public void Clear()
+		public NPCVariation(string name, Asset<Texture2D> texture, Func<bool> condition)
+			: this(name, texture)
 		{
-			Index = 0;
-			assets = null;
+			Condition = condition;
 		}
 
-		public override bool Equals([NotNullWhen(true)] object obj) => obj is VariationGroup other && other.Index == Index;
-
-		public override int GetHashCode() => HashCode.Combine(name, assets, condition, Index);
-
-		public static implicit operator int(VariationGroup group) => group.Index;
-		public static implicit operator bool(VariationGroup group) => group.condition();
-		public static implicit operator string(VariationGroup group) => group.name;
-
-		public static bool operator ==(VariationGroup left, VariationGroup right) => left.Equals(right);
-
-		public static bool operator !=(VariationGroup left, VariationGroup right) => !(left == right);
+		/// <summary>
+		/// Shorthand for .Condition, with incorporated null-checking of the condition itself
+		/// </summary>
+		public bool ConditionIsMet => Condition?.Invoke() ?? true;
 	}
 }

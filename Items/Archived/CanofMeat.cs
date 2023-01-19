@@ -1,4 +1,3 @@
-using Terraria.GameContent.Creative;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -6,7 +5,8 @@ namespace TheConfectionRebirth.Items.Archived
 {
 	public class CanofMeat : ModItem
 	{
-		public override void SetStaticDefaults() {
+		public override void SetStaticDefaults()
+		{
 			ItemID.Sets.Deprecated[Type] = true;
 		}
 

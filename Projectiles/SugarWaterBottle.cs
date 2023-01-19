@@ -1,12 +1,10 @@
+using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.Audio;
+using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using System;
 using TheConfectionRebirth.Dusts;
-using Terraria.DataStructures;
 
 namespace TheConfectionRebirth.Projectiles
 {
@@ -20,7 +18,7 @@ namespace TheConfectionRebirth.Projectiles
 			Projectile.friendly = true;
 			Projectile.penetrate = 1;
 		}
-	
+
 		public override void AI()
 		{
 			Projectile.ai[0] += 1f;
@@ -30,7 +28,7 @@ namespace TheConfectionRebirth.Projectiles
 				Projectile.velocity.X *= 0.998f;
 			}
 		}
-	
+
 		public override void Kill(int timeLeft)
 		{
 			if (Projectile.owner == Main.myPlayer)

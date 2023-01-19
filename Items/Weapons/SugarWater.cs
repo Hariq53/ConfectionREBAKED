@@ -1,4 +1,3 @@
-using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -13,7 +12,7 @@ namespace TheConfectionRebirth.Items.Weapons
 		{
 			SacrificeTotal = 99;
 		}
-	
+
 		public override void SetDefaults()
 		{
 			Item.useStyle = ItemUseStyleID.Swing;
@@ -33,8 +32,8 @@ namespace TheConfectionRebirth.Items.Weapons
 			Item.noMelee = true;
 			Item.value = 200;
 		}
-		
-		public override void AddRecipes() 
+
+		public override void AddRecipes()
 		{
 			CreateRecipe(10)
 				.AddIngredient<Sprinkles>(3)

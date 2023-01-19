@@ -1,10 +1,8 @@
 using Microsoft.Xna.Framework;
 using System;
 using Terraria;
-using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
-using TheConfectionRebirth.Buffs.NeapoliniteBuffs;
 
 namespace TheConfectionRebirth.Projectiles
 {
@@ -15,28 +13,28 @@ namespace TheConfectionRebirth.Projectiles
 			ProjectileID.Sets.CultistIsResistantTo[Projectile.type] = true;
 		}
 
-        public override void SetDefaults()
-        {
-            Projectile.width = 16;
-            Projectile.height = 16;
-            Projectile.friendly = true;
-            Projectile.DamageType = DamageClass.Magic;
-            Projectile.penetrate = 1;
-            Projectile.timeLeft = 2;
+		public override void SetDefaults()
+		{
+			Projectile.width = 16;
+			Projectile.height = 16;
+			Projectile.friendly = true;
+			Projectile.DamageType = DamageClass.Magic;
+			Projectile.penetrate = 1;
+			Projectile.timeLeft = 2;
 			Projectile.alpha = 255;
 			Projectile.tileCollide = false;
-        }
-        public override bool? CanCutTiles()
-        {
+		}
+		public override bool? CanCutTiles()
+		{
 			return false;
-        }
-        public override bool PreDraw(ref Color lightColor)
-        {
+		}
+		public override bool PreDraw(ref Color lightColor)
+		{
 			lightColor = Color.White;
 			return true;
 
 		}
-        public override void AI()
+		public override void AI()
 		{
 			const int unfadeTime = 30;
 			const float maxDetectRadius = 16 * 40;
@@ -58,9 +56,9 @@ namespace TheConfectionRebirth.Projectiles
 			Projectile.localAI[0] = Math.Min(Projectile.localAI[0] + 1, unfadeTime);
 
 			if (StackableBuffData.StrawberryStrike.FindBuff(Main.player[Projectile.owner], out byte _) == -1)
-            {
+			{
 				Projectile.Kill();
-            }
+			}
 		}
 
 		public NPC FindClosestNPC(float maxDetectDistance)

@@ -1,7 +1,6 @@
 ﻿using Terraria;
 using Terraria.Enums;
 using Terraria.ModLoader;
-using TheConfectionRebirth.Pets.BirdnanaLightPet;
 
 namespace TheConfectionRebirth.Pets.CookiestPet
 {

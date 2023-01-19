@@ -5,17 +5,17 @@ using TheConfectionRebirth.Backgrounds;
 
 namespace TheConfectionRebirth.Biomes
 {
-    public class ConfectionUndergroundBiome : ModBiome
-    {
-        public override string BestiaryIcon => "TheConfectionRebirth/Biomes/BestiaryIcon2";
+	public class ConfectionUndergroundBiome : ModBiome
+	{
+		public override string BestiaryIcon => "TheConfectionRebirth/Biomes/BestiaryIcon2";
 
-        public override string BackgroundPath => "TheConfectionRebirth/Biomes/ConfectionUndergroundMapBackground";
+		public override string BackgroundPath => "TheConfectionRebirth/Biomes/ConfectionUndergroundMapBackground";
 
 		public override string MapBackground => BackgroundPath;
 
 		public override Color? BackgroundColor => base.BackgroundColor;
 
-        public override int Music => MusicLoader.GetMusicSlot(Mod, "Sounds/Music/ConfectionUnderground");
+		public override int Music => MusicLoader.GetMusicSlot(Mod, "Sounds/Music/ConfectionUnderground");
 
 		public override ModUndergroundBackgroundStyle UndergroundBackgroundStyle => ModContent.GetInstance<ConfectionSnowUGBackgroundStyle>();
 

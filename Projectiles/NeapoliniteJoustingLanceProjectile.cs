@@ -26,12 +26,12 @@ namespace TheConfectionRebirth.Projectiles
 
 			Projectile.aiStyle = -1;
 
-			Projectile.alpha = 255; 
-			Projectile.friendly = true; 
-			Projectile.penetrate = -1; 
+			Projectile.alpha = 255;
+			Projectile.friendly = true;
+			Projectile.penetrate = -1;
 			Projectile.tileCollide = false;
-			Projectile.scale = 1f; 
-			Projectile.hide = true; 
+			Projectile.scale = 1f;
+			Projectile.hide = true;
 			Projectile.ownerHitCheck = true;
 			Projectile.DamageType = DamageClass.MeleeNoSpeed;
 		}
@@ -39,7 +39,7 @@ namespace TheConfectionRebirth.Projectiles
 		public override void AI()
 		{
 			Player owner = Main.player[Projectile.owner];
-			Projectile.direction = owner.direction; 
+			Projectile.direction = owner.direction;
 			owner.heldProj = Projectile.whoAmI;
 
 			int itemAnimationMax = owner.itemAnimationMax;
@@ -57,18 +57,18 @@ namespace TheConfectionRebirth.Projectiles
 			}
 
 			int itemAnimation = owner.itemAnimation;
-			float extension = 1 - Math.Max(itemAnimation - holdOutFrame, 0) / (float)(itemAnimationMax - holdOutFrame);
-			float retraction = 1 - Math.Min(itemAnimation, holdOutFrame) / (float)holdOutFrame;
+			float extension = 1 - (Math.Max(itemAnimation - holdOutFrame, 0) / (float)(itemAnimationMax - holdOutFrame));
+			float retraction = 1 - (Math.Min(itemAnimation, holdOutFrame) / (float)holdOutFrame);
 
-			float extendDist = 24; 
+			float extendDist = 24;
 			float retractDist = extendDist / 2;
-			float tipDist = 98 + extension * extendDist - retraction * retractDist;
+			float tipDist = 98 + (extension * extendDist) - (retraction * retractDist);
 
 			Vector2 center = owner.RotatedRelativePoint(owner.MountedCenter);
-			Projectile.Center = center; 
+			Projectile.Center = center;
 			Projectile.position += Projectile.velocity * tipDist;
 
-			Projectile.rotation = (float)Math.Atan2(Projectile.velocity.Y, Projectile.velocity.X) + (float)Math.PI * 3 / 4f;
+			Projectile.rotation = (float)Math.Atan2(Projectile.velocity.Y, Projectile.velocity.X) + ((float)Math.PI * 3 / 4f);
 
 			Projectile.alpha -= 40;
 			if (Projectile.alpha < 0)
@@ -101,7 +101,7 @@ namespace TheConfectionRebirth.Projectiles
 
 				if (Main.rand.NextBool(dustChance))
 				{
-					int newDust = Dust.NewDust(Projectile.Center - new Vector2(offset, offset), offset * 2, offset * 2, dustTypeCommon, Projectile.velocity.X * 0.2f + (Projectile.direction * 3), Projectile.velocity.Y * 0.2f, 100, default, 1.2f);
+					int newDust = Dust.NewDust(Projectile.Center - new Vector2(offset, offset), offset * 2, offset * 2, dustTypeCommon, (Projectile.velocity.X * 0.2f) + (Projectile.direction * 3), Projectile.velocity.Y * 0.2f, 100, default, 1.2f);
 					Main.dust[newDust].noGravity = true;
 					Main.dust[newDust].velocity *= 0.25f;
 					newDust = Dust.NewDust(Projectile.Center - new Vector2(offset, offset), offset * 2, offset * 2, dustTypeCommon, 0f, 0f, 150, default, 1.4f);
@@ -125,22 +125,22 @@ namespace TheConfectionRebirth.Projectiles
 
 		public override void ModifyDamageScaling(ref float damageScale)
 		{
-			damageScale *= 0.1f + Main.player[Projectile.owner].velocity.Length() / 7f * 0.9f;
+			damageScale *= 0.1f + (Main.player[Projectile.owner].velocity.Length() / 7f * 0.9f);
 		}
 
 		public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)
 		{
-			float rotationFactor = Projectile.rotation + (float)Math.PI / 4f; 
-			float scaleFactor = 95f; 
+			float rotationFactor = Projectile.rotation + ((float)Math.PI / 4f);
+			float scaleFactor = 95f;
 			float widthMultiplier = 23f;
 			float collisionPoint = 0f;
 
-			Rectangle lanceHitboxBounds = new Rectangle(0, 0, 300, 300);
+			Rectangle lanceHitboxBounds = new(0, 0, 300, 300);
 
-			lanceHitboxBounds.X = (int)Projectile.position.X - lanceHitboxBounds.Width / 2;
-			lanceHitboxBounds.Y = (int)Projectile.position.Y - lanceHitboxBounds.Height / 2;
+			lanceHitboxBounds.X = (int)Projectile.position.X - (lanceHitboxBounds.Width / 2);
+			lanceHitboxBounds.Y = (int)Projectile.position.Y - (lanceHitboxBounds.Height / 2);
 
-			Vector2 hitLineEnd = Projectile.Center + rotationFactor.ToRotationVector2() * scaleFactor;
+			Vector2 hitLineEnd = Projectile.Center + (rotationFactor.ToRotationVector2() * scaleFactor);
 
 			if (lanceHitboxBounds.Intersects(targetHitbox)
 				&& Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), Projectile.Center, hitLineEnd, widthMultiplier * Projectile.scale, ref collisionPoint))

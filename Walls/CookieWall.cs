@@ -4,12 +4,12 @@ using Terraria.ModLoader;
 
 namespace TheConfectionRebirth.Walls
 {
-    public class CookieWall : ModWall
-    {
-        public override void SetStaticDefaults()
-        {
-            Main.wallHouse[Type] = false;
-            AddMapEntry(new Color(61, 39, 27));
-        }
-    }
+	public class CookieWall : ModWall
+	{
+		public override void SetStaticDefaults()
+		{
+			Main.wallHouse[Type] = false;
+			AddMapEntry(new Color(61, 39, 27));
+		}
+	}
 }

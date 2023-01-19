@@ -2,11 +2,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Terraria;
-using Terraria.GameContent.Drawing;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -14,8 +10,8 @@ namespace TheConfectionRebirth.TilePostDraws
 {
 	internal class Moss : ModSystem
 	{
-		static Texture2D tex;
-		static Dictionary<byte, int> MossAdjacencyRules;
+		private static Texture2D tex;
+		private static Dictionary<byte, int> MossAdjacencyRules;
 		public static Dictionary<int, Color> MossColor;
 		public override void Load()
 		{
@@ -24,18 +20,18 @@ namespace TheConfectionRebirth.TilePostDraws
 			MossColor = new();
 			MassAdjBake();
 		}
-        public override void Unload()
-        {
+		public override void Unload()
+		{
 			tex = null;
 			MossAdjacencyRules = null;
 			MossColor = null;
 
 		}
-        private void GetScreenDrawArea(Vector2 screenPosition, Vector2 offSet, out int firstTileX, out int lastTileX, out int firstTileY, out int lastTileY)
+		private void GetScreenDrawArea(Vector2 screenPosition, Vector2 offSet, out int firstTileX, out int lastTileX, out int firstTileY, out int lastTileY)
 		{
-			firstTileX = (int)((screenPosition.X - offSet.X) / 16f - 1f);
+			firstTileX = (int)(((screenPosition.X - offSet.X) / 16f) - 1f);
 			lastTileX = (int)((screenPosition.X + Main.screenWidth + offSet.X) / 16f) + 2;
-			firstTileY = (int)((screenPosition.Y - offSet.Y) / 16f - 1f);
+			firstTileY = (int)(((screenPosition.Y - offSet.Y) / 16f) - 1f);
 			lastTileY = (int)((screenPosition.Y + Main.screenHeight + offSet.Y) / 16f) + 5;
 			if (firstTileX < 4)
 			{
@@ -70,7 +66,7 @@ namespace TheConfectionRebirth.TilePostDraws
 			{
 				screenOffset = Vector2.Zero;
 			}
-			this.GetScreenDrawArea(screenPosition, screenOffset + (Main.Camera.UnscaledPosition - Main.Camera.ScaledPosition), out int num3, out int num4, out int num5, out int num6);
+			GetScreenDrawArea(screenPosition, screenOffset + (Main.Camera.UnscaledPosition - Main.Camera.ScaledPosition), out int num3, out int num4, out int num5, out int num6);
 			for (int tileX = num3 - 2; tileX < num4 + 2; tileX++)
 			{
 				for (int tileY = num5; tileY < num6 + 4; tileY++)
@@ -144,7 +140,7 @@ namespace TheConfectionRebirth.TilePostDraws
 						{
 							mossAdjacency[7] = true;
 						}
-						Vector2 normalTilePosition = new Vector2(tileX * 16 - (int)screenPosition.X - (16 - 16f) / 2f, tileY * 16 - (int)screenPosition.Y + 0) + screenOffset + new Vector2(8f, 8f);
+						Vector2 normalTilePosition = new Vector2((tileX * 16) - (int)screenPosition.X - ((16 - 16f) / 2f), (tileY * 16) - (int)screenPosition.Y + 0) + screenOffset + new Vector2(8f, 8f);
 						Tile tile = Main.tile[tileX, tileY];
 						if (tile.IsHalfBlock)
 						{
@@ -164,7 +160,8 @@ namespace TheConfectionRebirth.TilePostDraws
 			Main.spriteBatch.End();
 		}
 
-		public void DrawMoss(SlopeType slope, Vector2 normalTilePosition, Rectangle MossTile, Color mossColor, int tileFrameX = 0, int addFrX = 0, int tileFrameY = 0, int addFrY = 0) {
+		public void DrawMoss(SlopeType slope, Vector2 normalTilePosition, Rectangle MossTile, Color mossColor, int tileFrameX = 0, int addFrX = 0, int tileFrameY = 0, int addFrY = 0)
+		{
 			const int Bottom_DrawFull = 24;
 			const int Bottom_DrawFullRemaining = 32 - Bottom_DrawFull;
 			const int Top_DrawFull = 10;
@@ -176,7 +173,7 @@ namespace TheConfectionRebirth.TilePostDraws
 				int yDrawDisp;
 				int yRectDisp;
 				int yRectDispEnd;
-				int disp = i * 2 - 8;
+				int disp = (i * 2) - 8;
 				switch (slope)
 				{
 					case SlopeType.SlopeDownLeft:
@@ -200,7 +197,7 @@ namespace TheConfectionRebirth.TilePostDraws
 						yRectDispEnd = disp + 8;
 						break;
 				}
-				Main.spriteBatch.Draw(tex, normalTilePosition + new Vector2(i * 2, yDrawDisp), new Rectangle((int)(MossTile.X + i * 2f), MossTile.Y + yRectDisp, 2, yRectDispEnd), mossColor, 0f, new Vector2(16, 16), 1f, SpriteEffects.None, 1f);
+				Main.spriteBatch.Draw(tex, normalTilePosition + new Vector2(i * 2, yDrawDisp), new Rectangle((int)(MossTile.X + (i * 2f)), MossTile.Y + yRectDisp, 2, yRectDispEnd), mossColor, 0f, new Vector2(16, 16), 1f, SpriteEffects.None, 1f);
 			}
 			switch (slope)
 			{
@@ -214,30 +211,30 @@ namespace TheConfectionRebirth.TilePostDraws
 			}
 		}
 
-		const byte TopLeft = 0;
-		const byte Top = 1;
-		const byte TopRight = 2;
-		const byte Left = 3;
-		const byte Right = 4;
-		const byte BottomLeft = 5;
-		const byte Bottom = 6;
-		const byte BottomRight = 7;
+		private const byte TopLeft = 0;
+		private const byte Top = 1;
+		private const byte TopRight = 2;
+		private const byte Left = 3;
+		private const byte Right = 4;
+		private const byte BottomLeft = 5;
+		private const byte Bottom = 6;
+		private const byte BottomRight = 7;
+		private const byte TopLeftFalse = 8;
+		private const byte TopFalse = 9;
+		private const byte TopRightFalse = 10;
+		private const byte LeftFalse = 11;
+		private const byte RightFalse = 12;
+		private const byte BottomLeftFalse = 13;
+		private const byte BottomFalse = 14;
+		private const byte BottomRightFalse = 15;
 
-		const byte TopLeftFalse = 8;
-		const byte TopFalse = 9;
-		const byte TopRightFalse = 10;
-		const byte LeftFalse = 11;
-		const byte RightFalse = 12;
-		const byte BottomLeftFalse = 13;
-		const byte BottomFalse = 14;
-		const byte BottomRightFalse = 15;
-		Rectangle GetMossTile_FromAdjacency(BitsByte adj, BitsByte mossAdjacency, Tile tile)
+		private Rectangle GetMossTile_FromAdjacency(BitsByte adj, BitsByte mossAdjacency, Tile tile)
 		{
 			MossAdjacencyRules.TryGetValue(adj, out int Base);
 			return GetMossTile(Base, tile.TileFrameNumber);
 		}
 
-		void MassAdjBake()
+		private void MassAdjBake()
 		{
 
 			AdjBake(0, Top, Bottom, TopRight, Right, BottomRight, LeftFalse);
@@ -314,7 +311,7 @@ namespace TheConfectionRebirth.TilePostDraws
 			AdjBake(46, Top, Left, Bottom, Right);
 		}
 
-		void AdjBake(int value, params byte[] adjRule)
+		private void AdjBake(int value, params byte[] adjRule)
 		{
 			BitsByte bakedByte = new();
 			Span<byte> IgnoreBytes = stackalloc byte[8];
@@ -336,29 +333,32 @@ namespace TheConfectionRebirth.TilePostDraws
 					if (index == i)
 						ignored = false;
 				}
-				if (ignored) {
+				if (ignored)
+				{
 					IgnoreBytes[i] = i;
 					ignoranceCount++;
 				}
 			}
 
 			int maxPermutations = (int)Math.Pow(2, ignoranceCount);
-			for (BitsByte permutations = 0; permutations < maxPermutations; permutations++) {
+			for (BitsByte permutations = 0; permutations < maxPermutations; permutations++)
+			{
 				for (int x = 0; x < ignoranceCount; x++)
 				{
 					bakedByte[IgnoreBytes[x]] = permutations[x];
 				}
 				MossAdjacencyRules.TryAdd(bakedByte, value);
 			}
-			
+
 		}
-		bool IsMoss(int i, int j)
+
+		private bool IsMoss(int i, int j)
 		{
 			Tile tile = Main.tile[i, j];
 			return tile.HasTile && MossColor.TryGetValue(tile.TileType, out Color _);
 		}
 
-		Color? GetMossData(int i, int j)
+		private Color? GetMossData(int i, int j)
 		{
 			Tile tile = Main.tile[i, j];
 			if (tile.HasTile && MossColor.TryGetValue(tile.TileType, out Color rv))
@@ -367,7 +367,8 @@ namespace TheConfectionRebirth.TilePostDraws
 			}
 			return null;
 		}
-		bool Conencted(int x, int y, int dx, int dy)
+
+		private bool Conencted(int x, int y, int dx, int dy)
 		{
 			Tile tile = Main.tile[x, y];
 			switch (tile.Slope)
@@ -395,7 +396,7 @@ namespace TheConfectionRebirth.TilePostDraws
 			}
 
 			Tile tile2 = Main.tile[x + dx, y + dy];
-			if(!tile2.HasTile || !Main.tileSolid[tile2.TileType])
+			if (!tile2.HasTile || !Main.tileSolid[tile2.TileType])
 				return false;
 
 			switch (tile2.Slope)
@@ -424,9 +425,10 @@ namespace TheConfectionRebirth.TilePostDraws
 			return true;
 
 		}
-		Rectangle GetMossTile(int x, int y)
+
+		private Rectangle GetMossTile(int x, int y)
 		{
-			return new Rectangle(x * 36 + 2, y * 36 + 2, 32, 32);
+			return new Rectangle((x * 36) + 2, (y * 36) + 2, 32, 32);
 		}
 	}
 }

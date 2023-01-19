@@ -1,8 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using System;
 using Terraria;
-using Terraria.Audio;
-using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -47,7 +45,7 @@ namespace TheConfectionRebirth.Pets.CookiestPet
 			vector.X = player.Center.X;
 			Projectile.rotation += Projectile.velocity.X / 20f;
 
-			Projectile.shouldFallThrough = (player.position.Y + (float)player.height - 12f > Projectile.position.Y + (float)Projectile.height);
+			Projectile.shouldFallThrough = player.position.Y + player.height - 12f > Projectile.position.Y + Projectile.height;
 			Projectile.friendly = false;
 			int num9 = 0;
 			int num10 = 15;
@@ -70,9 +68,9 @@ namespace TheConfectionRebirth.Pets.CookiestPet
 					float num15 = vector5.Length();
 					if (num15 > 2000f)
 					{
-						Projectile.position = player.Center - new Vector2((float)Projectile.width, (float)Projectile.height) / 2f;
+						Projectile.position = player.Center - (new Vector2(Projectile.width, Projectile.height) / 2f);
 					}
-					if (num15 < (float)num14 && player.velocity.Y == 0f && Projectile.position.Y + (float)Projectile.height <= player.position.Y + (float)player.height && !Collision.SolidCollision(Projectile.position, Projectile.width, Projectile.height))
+					if (num15 < num14 && player.velocity.Y == 0f && Projectile.position.Y + Projectile.height <= player.position.Y + player.height && !Collision.SolidCollision(Projectile.position, Projectile.width, Projectile.height))
 					{
 						Projectile.ai[0] = 0f;
 						Projectile.netUpdate = true;
@@ -90,7 +88,7 @@ namespace TheConfectionRebirth.Pets.CookiestPet
 							Projectile.velocity.X = Projectile.velocity.X + num12;
 							if (Projectile.velocity.X < 0f)
 							{
-								Projectile.velocity.X = Projectile.velocity.X + num12 * 1.5f;
+								Projectile.velocity.X = Projectile.velocity.X + (num12 * 1.5f);
 							}
 						}
 						if (Projectile.velocity.X > vector5.X)
@@ -98,7 +96,7 @@ namespace TheConfectionRebirth.Pets.CookiestPet
 							Projectile.velocity.X = Projectile.velocity.X - num12;
 							if (Projectile.velocity.X > 0f)
 							{
-								Projectile.velocity.X = Projectile.velocity.X - num12 * 1.5f;
+								Projectile.velocity.X = Projectile.velocity.X - (num12 * 1.5f);
 							}
 						}
 						if (Projectile.velocity.Y < vector5.Y)
@@ -106,7 +104,7 @@ namespace TheConfectionRebirth.Pets.CookiestPet
 							Projectile.velocity.Y = Projectile.velocity.Y + num12;
 							if (Projectile.velocity.Y < 0f)
 							{
-								Projectile.velocity.Y = Projectile.velocity.Y + num12 * 1.5f;
+								Projectile.velocity.Y = Projectile.velocity.Y + (num12 * 1.5f);
 							}
 						}
 						if (Projectile.velocity.Y > vector5.Y)
@@ -114,7 +112,7 @@ namespace TheConfectionRebirth.Pets.CookiestPet
 							Projectile.velocity.Y = Projectile.velocity.Y - num12;
 							if (Projectile.velocity.Y > 0f)
 							{
-								Projectile.velocity.Y = Projectile.velocity.Y - num12 * 1.5f;
+								Projectile.velocity.Y = Projectile.velocity.Y - (num12 * 1.5f);
 							}
 						}
 					}
@@ -125,7 +123,7 @@ namespace TheConfectionRebirth.Pets.CookiestPet
 					if (Main.LocalPlayer.miscCounter % 3 == 0)
 					{
 						int num17 = 2;
-						Dust dust2 = Main.dust[Dust.NewDust(Projectile.position + new Vector2((float)(-(float)num17), (float)(-(float)num17)), 16 + num17 * 2, 16 + num17 * 2, 0, 0f, 0f, 0, default(Color), 0.8f)];
+						Dust dust2 = Main.dust[Dust.NewDust(Projectile.position + new Vector2((float)-(float)num17, (float)-(float)num17), 16 + (num17 * 2), 16 + (num17 * 2), 0, 0f, 0f, 0, default(Color), 0.8f)];
 						dust2.velocity = -Projectile.velocity * 0.25f;
 						dust2.velocity = dust2.velocity.RotatedByRandom(0.2617993950843811);
 					}
@@ -176,7 +174,7 @@ namespace TheConfectionRebirth.Pets.CookiestPet
 					vector = center;
 					if (Projectile.IsInRangeOfMeOrMyOwner(npc, maxDistance, out float num21, out float num22, out bool flag12))
 					{
-						Projectile.shouldFallThrough = (npc.Center.Y > Projectile.Bottom.Y);
+						Projectile.shouldFallThrough = npc.Center.Y > Projectile.Bottom.Y;
 						bool flag13 = Projectile.velocity.Y == 0f;
 						if (Projectile.wet && Projectile.velocity.Y > 0f && !Projectile.shouldFallThrough)
 						{
@@ -200,9 +198,9 @@ namespace TheConfectionRebirth.Pets.CookiestPet
 								Projectile.velocity /= Projectile.velocity.Length() / 10f;
 							}
 							Projectile.ai[0] = 2f;
-							Projectile.ai[1] = (float)num10;
+							Projectile.ai[1] = num10;
 							Projectile.netUpdate = true;
-							Projectile.direction = ((center.X - Projectile.Center.X > 0f) ? 1 : -1);
+							Projectile.direction = (center.X - Projectile.Center.X > 0f) ? 1 : -1;
 						}
 					}
 				}
@@ -216,7 +214,7 @@ namespace TheConfectionRebirth.Pets.CookiestPet
 					Vector2 vector6 = player.Center - Projectile.Center;
 					if (vector6.Length() > 2000f)
 					{
-						Projectile.position = player.Center - new Vector2(Projectile.width, Projectile.height) / 2f;
+						Projectile.position = player.Center - (new Vector2(Projectile.width, Projectile.height) / 2f);
 					}
 					else if (vector6.Length() > num2 || Math.Abs(vector6.Y) > num3)
 					{
@@ -248,8 +246,8 @@ namespace TheConfectionRebirth.Pets.CookiestPet
 							vector.Y += 16f;
 							num28++;
 						}
-						Vector2 value = Collision.TileCollision(player.Center - Projectile.Size / 2f, vector - player.Center, Projectile.width, Projectile.height, false, false, 1);
-						vector = player.Center - Projectile.Size / 2f + value;
+						Vector2 value = Collision.TileCollision(player.Center - (Projectile.Size / 2f), vector - player.Center, Projectile.width, Projectile.height, false, false, 1);
+						vector = player.Center - (Projectile.Size / 2f) + value;
 						if (Projectile.Distance(vector) < 32f)
 						{
 							float num29 = player.Center.Distance(vector);
@@ -266,14 +264,14 @@ namespace TheConfectionRebirth.Pets.CookiestPet
 							Vector2 value3 = r.TopLeft();
 							for (float num30 = 0f; num30 < 1f; num30 += 0.05f)
 							{
-								Vector2 vector8 = r.TopLeft() + value2 * num30;
-								if (Collision.SolidCollision(r.TopLeft() + value2 * num30, rectangle.Width, rectangle.Height))
+								Vector2 vector8 = r.TopLeft() + (value2 * num30);
+								if (Collision.SolidCollision(r.TopLeft() + (value2 * num30), rectangle.Width, rectangle.Height))
 								{
 									break;
 								}
 								value3 = vector8;
 							}
-							vector = value3 + Projectile.Size / 2f;
+							vector = value3 + (Projectile.Size / 2f);
 						}
 					}
 					Projectile.tileCollide = true;
@@ -286,7 +284,7 @@ namespace TheConfectionRebirth.Pets.CookiestPet
 						num33 = Math.Abs(player.velocity.X) + Math.Abs(player.velocity.Y);
 						num31 = 0.7f;
 					}
-					
+
 					float num35 = player.velocity.Length();
 					if (num35 < 0.1f)
 					{
@@ -350,11 +348,11 @@ namespace TheConfectionRebirth.Pets.CookiestPet
 					bool flag16 = Math.Abs(vector9.X) >= 64f || (vector9.Y <= -48f && Math.Abs(vector9.X) >= 8f);
 					if (num36 != 0 && flag16)
 					{
-						int num38 = (int)(Projectile.position.X + Projectile.width / 2) / 16;
+						int num38 = (int)(Projectile.position.X + (Projectile.width / 2)) / 16;
 						int num39 = (int)Projectile.position.Y / 16;
 						num38 += num36;
 						num38 += (int)Projectile.velocity.X;
-						for (int j = num39; j < num39 + Projectile.height / 16 + 1; j++)
+						for (int j = num39; j < num39 + (Projectile.height / 16) + 1; j++)
 						{
 							if (WorldGen.SolidTile(num38, j, false))
 							{
@@ -375,22 +373,22 @@ namespace TheConfectionRebirth.Pets.CookiestPet
 						{
 							for (int k = 0; k < 3; k++)
 							{
-								int num41 = (int)(Projectile.position.X + (float)(Projectile.width / 2)) / 16;
+								int num41 = (int)(Projectile.position.X + (Projectile.width / 2)) / 16;
 								if (k == 0)
 								{
 									num41 = (int)Projectile.position.X / 16;
 								}
 								if (k == 2)
 								{
-									num41 = (int)(Projectile.position.X + (float)Projectile.width) / 16;
+									num41 = (int)(Projectile.position.X + Projectile.width) / 16;
 								}
-								int num42 = (int)(Projectile.position.Y + (float)Projectile.height) / 16;
-								if (WorldGen.SolidTile(num41, num42, false) || Main.tile[num41, num42].IsHalfBlock || Main.tile[num41, num42].Slope > 0 || (TileID.Sets.Platforms[(int)Main.tile[num41, num42].TileType] && Main.tile[num41, num42].HasTile && !Main.tile[num41, num42].IsActuated))
+								int num42 = (int)(Projectile.position.Y + Projectile.height) / 16;
+								if (WorldGen.SolidTile(num41, num42, false) || Main.tile[num41, num42].IsHalfBlock || Main.tile[num41, num42].Slope > 0 || (TileID.Sets.Platforms[Main.tile[num41, num42].TileType] && Main.tile[num41, num42].HasTile && !Main.tile[num41, num42].IsActuated))
 								{
 									try
 									{
-										num41 = (int)(Projectile.position.X + (float)(Projectile.width / 2)) / 16;
-										num42 = (int)(Projectile.position.Y + (float)(Projectile.height / 2)) / 16;
+										num41 = (int)(Projectile.position.X + (Projectile.width / 2)) / 16;
+										num42 = (int)(Projectile.position.Y + (Projectile.height / 2)) / 16;
 										num41 += num36;
 										num41 += (int)Projectile.velocity.X;
 										if (!WorldGen.SolidTile(num41, num42 - 1, false) && !WorldGen.SolidTile(num41, num42 - 2, false))
@@ -481,7 +479,7 @@ namespace TheConfectionRebirth.Pets.CookiestPet
 							{
 								Dust dust3 = Main.dust[Dust.NewDust(Projectile.position + Projectile.velocity, 16, 16, ModContent.DustType<Dusts.CreamwoodDust>(), 0f, 0f, 0, default(Color), 0.8f)];
 								dust3.velocity.X = Projectile.velocity.X * 0.25f;
-								dust3.velocity.Y = -2f + Math.Abs(Projectile.velocity.Y) * 0.25f;
+								dust3.velocity.Y = -2f + (Math.Abs(Projectile.velocity.Y) * 0.25f);
 								dust3.velocity = dust3.velocity.RotatedByRandom(0.2617993950843811);
 							}
 						}
@@ -519,7 +517,7 @@ namespace TheConfectionRebirth.Pets.CookiestPet
 						Projectile.direction = -1;
 					}
 					Projectile.spriteDirection = Projectile.direction;
-					Projectile.velocity.Y = Projectile.velocity.Y + (0.4f + num40 * 1f);
+					Projectile.velocity.Y = Projectile.velocity.Y + (0.4f + (num40 * 1f));
 					if (Projectile.velocity.Y > 10f)
 					{
 						Projectile.velocity.Y = 10f;
@@ -533,7 +531,7 @@ namespace TheConfectionRebirth.Pets.CookiestPet
 				Projectile.ai[1] = 0f;
 				return;
 			}
-			float maxDistance2 = (float)num;
+			float maxDistance2 = num;
 			NPC npc2 = Main.npc[num11];
 			vector = npc2.Center;
 			if (!Projectile.IsInRangeOfMeOrMyOwner(npc2, maxDistance2, out _, out _, out _))
@@ -565,7 +563,7 @@ namespace TheConfectionRebirth.Pets.CookiestPet
 			if (Projectile.Hitbox.Intersects(npc2.Hitbox) && Projectile.velocity.Y >= 0f)
 			{
 				Projectile.velocity.Y = -8f;
-				Projectile.velocity.X = (float)(Projectile.direction * 10);
+				Projectile.velocity.X = Projectile.direction * 10;
 			}
 			float num56 = 20f;
 			float maxAmountAllowedToMove = 4f;
@@ -586,7 +584,7 @@ namespace TheConfectionRebirth.Pets.CookiestPet
 			}
 			Projectile.velocity = Projectile.velocity.MoveTowards(vector10, maxAmountAllowedToMove);
 			Projectile.frame = 8;
-			Projectile.rotation += 0.6f * (float)Projectile.spriteDirection;
+			Projectile.rotation += 0.6f * Projectile.spriteDirection;
 		}
 	}
 }

@@ -4,26 +4,26 @@ using Terraria.ModLoader;
 
 namespace TheConfectionRebirth.Projectiles
 {
-    public class SpearofCavendesProj : ModProjectile
-    {
+	public class SpearofCavendesProj : ModProjectile
+	{
 		protected virtual float HoldoutRangeMin => 98f;
 		protected virtual float HoldoutRangeMax => 200f;
 
-        public override void SetDefaults()
-        {
-            Projectile.width = 18;
-            Projectile.height = 18;
-            Projectile.aiStyle = 19;
-            Projectile.penetrate = -1;
-            Projectile.scale = 1.3f;
-            Projectile.alpha = 0;
+		public override void SetDefaults()
+		{
+			Projectile.width = 18;
+			Projectile.height = 18;
+			Projectile.aiStyle = 19;
+			Projectile.penetrate = -1;
+			Projectile.scale = 1.3f;
+			Projectile.alpha = 0;
 
-            Projectile.hide = true;
-            Projectile.ownerHitCheck = true;
-            Projectile.DamageType = DamageClass.Melee;
-            Projectile.tileCollide = false;
-            Projectile.friendly = true;
-        }
+			Projectile.hide = true;
+			Projectile.ownerHitCheck = true;
+			Projectile.DamageType = DamageClass.Melee;
+			Projectile.tileCollide = false;
+			Projectile.friendly = true;
+		}
 
 		public override bool PreAI()
 		{

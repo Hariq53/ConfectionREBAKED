@@ -5,8 +5,8 @@ using TheConfectionRebirth.Dusts;
 
 namespace TheConfectionRebirth.Walls
 {
-    public class SherbetWall : ModWall
-    {
+	public class SherbetWall : ModWall
+	{
 		public override void SetStaticDefaults()
 		{
 			Main.wallHouse[Type] = true;

@@ -12,19 +12,23 @@ namespace TheConfectionRebirth.Items.Weapons.Minions.Meawzer
 			Main.buffNoTimeDisplay[Type] = true;
 			Main.buffNoSave[Type] = true;
 		}
-	
-		public override void Update(Player player, ref int buffIndex) {
-				ConfectionPlayer modPlayer = player.GetModPlayer<ConfectionPlayer>();
-				if (player.ownedProjectileCounts[ModContent.ProjectileType<MeawzerSummonProj>()] > 0) {
-					modPlayer.littleMeawzer = true;
-				}
-				if (!modPlayer.littleMeawzer) {
-					player.DelBuff(buffIndex);
-					buffIndex--;
-				}
-				else {
-					player.buffTime[buffIndex] = 18000;
-				}
+
+		public override void Update(Player player, ref int buffIndex)
+		{
+			ConfectionPlayer modPlayer = player.GetModPlayer<ConfectionPlayer>();
+			if (player.ownedProjectileCounts[ModContent.ProjectileType<MeawzerSummonProj>()] > 0)
+			{
+				modPlayer.littleMeawzer = true;
 			}
+			if (!modPlayer.littleMeawzer)
+			{
+				player.DelBuff(buffIndex);
+				buffIndex--;
+			}
+			else
+			{
+				player.buffTime[buffIndex] = 18000;
+			}
+		}
 	}
 }

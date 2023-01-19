@@ -1,13 +1,14 @@
 using Terraria;
-using Terraria.GameContent.Creative;
 using Terraria.ID;
 using Terraria.ModLoader;
 using TheConfectionRebirth.Tiles;
 
 namespace TheConfectionRebirth.Items.Archived
 {
-	public class MeetyMummyBanner : ModItem {
-		public override void SetStaticDefaults() {
+	public class MeetyMummyBanner : ModItem
+	{
+		public override void SetStaticDefaults()
+		{
 			Terraria.ID.ItemID.Sets.Deprecated[Type] = true;
 		}
 

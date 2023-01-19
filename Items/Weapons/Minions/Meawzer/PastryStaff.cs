@@ -1,20 +1,22 @@
-using Terraria.DataStructures;
-using TheConfectionRebirth.Items.Placeable;
 using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
+using TheConfectionRebirth.Items.Placeable;
 
 namespace TheConfectionRebirth.Items.Weapons.Minions.Meawzer
 {
 	public class PastryStaff : ModItem
 	{
-		public override void SetStaticDefaults() {
+		public override void SetStaticDefaults()
+		{
 			ItemID.Sets.GamepadWholeScreenUseRange[Item.type] = true;
 			ItemID.Sets.LockOnIgnoresCollision[Item.type] = true;
 		}
 
-		public override void SetDefaults() {
+		public override void SetDefaults()
+		{
 			Item.damage = 24;
 			Item.DamageType = DamageClass.Summon;
 			Item.mana = 10;

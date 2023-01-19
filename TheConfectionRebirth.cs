@@ -13,18 +13,23 @@ using Terraria.ModLoader;
 using Terraria.Utilities;
 using TheConfectionRebirth.Backgrounds;
 using TheConfectionRebirth.Biomes;
-using TheConfectionRebirth.Items.Archived;
 using TheConfectionRebirth.ModSupport;
 
-namespace TheConfectionRebirth {
-	public class TheConfectionRebirth : Mod {
-		private struct DateTimeMatch {
+namespace TheConfectionRebirth
+{
+	public class TheConfectionRebirth : Mod
+	{
+		private struct DateTimeMatch
+		{
 			private readonly bool value;
 
-			public DateTimeMatch(DateTime time, params DateTime[] matchFor) {
+			public DateTimeMatch(DateTime time, params DateTime[] matchFor)
+			{
 				value = false;
-				foreach (var d in matchFor) {
-					if (time.Day.Equals(d.Day) && time.Month.Equals(d.Month)) {
+				foreach (var d in matchFor)
+				{
+					if (time.Day.Equals(d.Day) && time.Month.Equals(d.Month))
+					{
 						value = true;
 						break;
 					}
@@ -33,8 +38,10 @@ namespace TheConfectionRebirth {
 
 			public bool ToBoolean() => value;
 		}
-		public class TileTest {
-			public bool this[int tile1, int tile2] {
+		public class TileTest
+		{
+			public bool this[int tile1, int tile2]
+			{
 				get => Main.tileMerge[tile1][tile2] || Main.tileMerge[tile2][tile1];
 				set => ConfectionUtils.Merge(tile1, tile2);
 			}
@@ -51,26 +58,30 @@ namespace TheConfectionRebirth {
 
 		private static MethodInfo Limits = null;
 
-		private static event ILContext.Manipulator ModifyLimits {
+		private static event ILContext.Manipulator ModifyLimits
+		{
 			add => HookEndpointManager.Modify(Limits, value);
 			remove => HookEndpointManager.Unmodify(Limits, value);
 		}
 
 		private static MethodInfo Limits2 = null;
 
-		private static event ILContext.Manipulator ModifyLimits2 {
+		private static event ILContext.Manipulator ModifyLimits2
+		{
 			add => HookEndpointManager.Modify(Limits2, value);
 			remove => HookEndpointManager.Unmodify(Limits2, value);
 		}
 
 		private static MethodInfo Limits3 = null;
 
-		private static event ILContext.Manipulator ModifyLimits3 {
+		private static event ILContext.Manipulator ModifyLimits3
+		{
 			add => HookEndpointManager.Modify(Limits3, value);
 			remove => HookEndpointManager.Unmodify(Limits3, value);
 		}
 
-		public override void Load() {
+		public override void Load()
+		{
 			backgroundChangeFlashInfo_UpdateVariation = typeof(BackgroundChangeFlashInfo).GetMethod("UpdateVariation", BindingFlags.NonPublic | BindingFlags.Instance).CreateDelegate<BackgroundChangeFlashInfo_UpdateVariation>();
 
 			Fields = new dynamic[]
@@ -101,8 +112,10 @@ namespace TheConfectionRebirth {
 			float[] newFlashPower = new float[_flashPower.Length + bgVarAmount];
 			int[] newVariations = new int[_variations.Length + bgVarAmount];
 			_cacheIndexes = new int[bgVarAmount];
-			for (int i = 0; i < newFlashPower.Length; i++) {
-				if (i >= _flashPower.Length) {
+			for (int i = 0; i < newFlashPower.Length; i++)
+			{
+				if (i >= _flashPower.Length)
+				{
 					newFlashPower[i] = 0f;
 					newVariations[i] = 0;
 					_cacheIndexes[i - _flashPower.Length] = i;
@@ -123,25 +136,31 @@ namespace TheConfectionRebirth {
 
 		private static double _backgroundTopMagicNumberCache;
 		private static int _pushBGTopHackCache;
-		private static void Main_DrawSurfaceBG_BackMountainsStep1(On.Terraria.Main.orig_DrawSurfaceBG_BackMountainsStep1 orig, Main self, double backgroundTopMagicNumber, float bgGlobalScaleMultiplier, int pushBGTopHack) {
+		private static void Main_DrawSurfaceBG_BackMountainsStep1(On.Terraria.Main.orig_DrawSurfaceBG_BackMountainsStep1 orig, Main self, double backgroundTopMagicNumber, float bgGlobalScaleMultiplier, int pushBGTopHack)
+		{
 			_backgroundTopMagicNumberCache = backgroundTopMagicNumber;
 			_pushBGTopHackCache = pushBGTopHack;
 			orig(self, backgroundTopMagicNumber, bgGlobalScaleMultiplier, pushBGTopHack);
 		}
 
 		private static int[] _cacheIndexes;
-		private static void BackgroundChangeFlashInfo_UpdateCache(On.Terraria.GameContent.BackgroundChangeFlashInfo.orig_UpdateCache orig, BackgroundChangeFlashInfo self) {
+		private static void BackgroundChangeFlashInfo_UpdateCache(On.Terraria.GameContent.BackgroundChangeFlashInfo.orig_UpdateCache orig, BackgroundChangeFlashInfo self)
+		{
 			orig(self);
 
 			for (int i = 0; i < bgVarAmount; i++)
 				backgroundChangeFlashInfo_UpdateVariation(self, _cacheIndexes[i], ConfectionWorld.ConfectionSurfaceBG[i]);
 		}
 
-		private void WorldGen_RandomizeBackgroundBasedOnPlayer(On.Terraria.WorldGen.orig_RandomizeBackgroundBasedOnPlayer orig, UnifiedRandom random, Player player) {
-			if (ModContent.GetInstance<ConfectionBiomeTileCount>().confectionBlockCount >= 120) {
+		private void WorldGen_RandomizeBackgroundBasedOnPlayer(On.Terraria.WorldGen.orig_RandomizeBackgroundBasedOnPlayer orig, UnifiedRandom random, Player player)
+		{
+			if (ModContent.GetInstance<ConfectionBiomeTileCount>().confectionBlockCount >= 120)
+			{
 				int[] rand = new int[4] { Main.rand.Next(bgVarAmount), Main.rand.Next(bgVarAmount), Main.rand.Next(bgVarAmount), Main.rand.Next(bgVarAmount) };
-				for (int i = 0; i < bgVarAmount; i++) {
-					while (ConfectionWorld.ConfectionSurfaceBG[i] == rand[i]) {
+				for (int i = 0; i < bgVarAmount; i++)
+				{
+					while (ConfectionWorld.ConfectionSurfaceBG[i] == rand[i])
+					{
 						rand[i] = Main.rand.Next(bgVarAmount);
 						if (SecretChance)
 							ConfectionWorld.Secret = true;
@@ -158,7 +177,8 @@ namespace TheConfectionRebirth {
 			orig(random, player);
 		}
 
-		public override void Unload() {
+		public override void Unload()
+		{
 			if (Limits != null)
 				ModifyLimits -= TheConfectionRebirth_ModifyLimits;
 			Limits = null;
@@ -177,23 +197,28 @@ namespace TheConfectionRebirth {
 			v = null;
 		}
 
-		public override void PostSetupContent() {
+		public override void PostSetupContent()
+		{
 			SummonersShineThoughtBubble.PostSetupContent();
 			StackableBuffData.PostSetupContent();
 			ModSupport.ModSupportBaseClass.HookAll();
 		}
 
 		// middle
-		private void TheConfectionRebirth_ModifyLimits(ILContext il) {
+		private void TheConfectionRebirth_ModifyLimits(ILContext il)
+		{
 			ILCursor c = new(il);
 			if (!c.TryGotoNext(i => i.MatchCallvirt(typeof(Asset<Texture2D>).GetMethod("get_Value"))))
 				return;
 
 			c.Index++;
 			c.Emit(OpCodes.Ldloc, 1);
-			c.EmitDelegate<Func<Texture2D, ModSurfaceBackgroundStyle, Texture2D>>((value, style) => {
-				if (style is IBackground) {
-					if (ConfectionWorld.ConfectionSurfaceBG[1] == -1) {
+			c.EmitDelegate<Func<Texture2D, ModSurfaceBackgroundStyle, Texture2D>>((value, style) =>
+			{
+				if (style is IBackground)
+				{
+					if (ConfectionWorld.ConfectionSurfaceBG[1] == -1)
+					{
 						ConfectionWorld.ConfectionSurfaceBG[1] = Main.rand.Next(bgVarAmount);
 						if (SecretChance)
 							ConfectionWorld.Secret = true;
@@ -213,9 +238,12 @@ namespace TheConfectionRebirth {
 				return;
 
 			c.Emit(OpCodes.Ldloc, 1);
-			c.EmitDelegate<Func<int, ModSurfaceBackgroundStyle, int>>((v, style) => {
-				if (style is IBackground) {
-					if (ConfectionWorld.ConfectionSurfaceBG[1] == -1) {
+			c.EmitDelegate<Func<int, ModSurfaceBackgroundStyle, int>>((v, style) =>
+			{
+				if (style is IBackground)
+				{
+					if (ConfectionWorld.ConfectionSurfaceBG[1] == -1)
+					{
 						ConfectionWorld.ConfectionSurfaceBG[1] = Main.rand.Next(bgVarAmount);
 						if (SecretChance)
 							ConfectionWorld.Secret = true;
@@ -235,9 +263,12 @@ namespace TheConfectionRebirth {
 				return;
 
 			c.Emit(OpCodes.Ldloc, 1);
-			c.EmitDelegate<Func<int, ModSurfaceBackgroundStyle, int>>((v, style) => {
-				if (style is IBackground) {
-					if (ConfectionWorld.ConfectionSurfaceBG[1] == -1) {
+			c.EmitDelegate<Func<int, ModSurfaceBackgroundStyle, int>>((v, style) =>
+			{
+				if (style is IBackground)
+				{
+					if (ConfectionWorld.ConfectionSurfaceBG[1] == -1)
+					{
 						ConfectionWorld.ConfectionSurfaceBG[1] = Main.rand.Next(bgVarAmount);
 						if (SecretChance)
 							ConfectionWorld.Secret = true;
@@ -253,7 +284,8 @@ namespace TheConfectionRebirth {
 
 		private static dynamic[] Fields;
 		// far and super far
-		private void TheConfectionRebirth_ModifyLimits2(ILContext il) {
+		private void TheConfectionRebirth_ModifyLimits2(ILContext il)
+		{
 			ILCursor c = new(il);
 
 			if (!c.TryGotoNext(i => i.MatchLdloc(3),
@@ -261,15 +293,19 @@ namespace TheConfectionRebirth {
 				return;
 
 			c.Emit(OpCodes.Ldloc, 1);
-			c.EmitDelegate<Action<ModSurfaceBackgroundStyle>>((style) => {
+			c.EmitDelegate<Action<ModSurfaceBackgroundStyle>>((style) =>
+			{
 				if (style == null || style is not IBackground)
 					return;
 
 				int slot = style.Slot;
 				float alpha = Main.bgAlphaFarBackLayer[slot];
-				if (alpha > 0f) {
-					for (int i = 0; i < (int)Fields[0].GetValue(Main.instance); i++) {
-						if (ConfectionWorld.ConfectionSurfaceBG[3] == -1) {
+				if (alpha > 0f)
+				{
+					for (int i = 0; i < (int)Fields[0].GetValue(Main.instance); i++)
+					{
+						if (ConfectionWorld.ConfectionSurfaceBG[3] == -1)
+						{
 							ConfectionWorld.ConfectionSurfaceBG[3] = Main.rand.Next(bgVarAmount);
 							if (SecretChance)
 								ConfectionWorld.Secret = true;
@@ -285,13 +321,13 @@ namespace TheConfectionRebirth {
 						Color ColorOfSurfaceBackgroundsModified = (Color)Fields[1].GetValue(null);
 						float scAdj = (float)Fields[3].GetValue(Main.instance);
 						int bgWidthScaled = (int)Fields[2].GetValue(null);
-						int bgTopY = !Main.gameMenu ? (int)(_backgroundTopMagicNumberCache * 1300.0 + 1005.0 + (int)scAdj + _pushBGTopHackCache + 40) : 75 + _pushBGTopHackCache;
+						int bgTopY = !Main.gameMenu ? (int)((_backgroundTopMagicNumberCache * 1300.0) + 1005.0 + (int)scAdj + _pushBGTopHackCache + 40) : 75 + _pushBGTopHackCache;
 
 						float bgScale = (float)Fields[4].GetValue(null);
 						int bgStartX = (int)(0.0 - Math.IEEERemainder((double)Main.screenPosition.X * bgParallax, bgWidthScaled) - (bgWidthScaled / 2));
 
 						Main.spriteBatch.Draw(texture,
-							new Vector2(bgStartX + bgWidthScaled * i, bgTopY - 20),
+							new Vector2(bgStartX + (bgWidthScaled * i), bgTopY - 20),
 							new Rectangle?(new Rectangle(0, 0, texture.Width, texture.Height)),
 							ColorOfSurfaceBackgroundsModified, 0f, default,
 							bgScale, 0, 0f);
@@ -304,9 +340,12 @@ namespace TheConfectionRebirth {
 
 			c.Index++;
 			c.Emit(OpCodes.Ldloc, 1);
-			c.EmitDelegate<Func<Texture2D, ModSurfaceBackgroundStyle, Texture2D>>((value, style) => {
-				if (style is IBackground) {
-					if (ConfectionWorld.ConfectionSurfaceBG[2] == -1) {
+			c.EmitDelegate<Func<Texture2D, ModSurfaceBackgroundStyle, Texture2D>>((value, style) =>
+			{
+				if (style is IBackground)
+				{
+					if (ConfectionWorld.ConfectionSurfaceBG[2] == -1)
+					{
 						ConfectionWorld.ConfectionSurfaceBG[2] = Main.rand.Next(bgVarAmount);
 						if (SecretChance)
 							ConfectionWorld.Secret = true;
@@ -326,9 +365,12 @@ namespace TheConfectionRebirth {
 				return;
 
 			c.Emit(OpCodes.Ldloc, 1);
-			c.EmitDelegate<Func<int, ModSurfaceBackgroundStyle, int>>((v, style) => {
-				if (style is IBackground) {
-					if (ConfectionWorld.ConfectionSurfaceBG[2] == -1) {
+			c.EmitDelegate<Func<int, ModSurfaceBackgroundStyle, int>>((v, style) =>
+			{
+				if (style is IBackground)
+				{
+					if (ConfectionWorld.ConfectionSurfaceBG[2] == -1)
+					{
 						ConfectionWorld.ConfectionSurfaceBG[2] = Main.rand.Next(bgVarAmount);
 						if (SecretChance)
 							ConfectionWorld.Secret = true;
@@ -348,9 +390,12 @@ namespace TheConfectionRebirth {
 				return;
 
 			c.Emit(OpCodes.Ldloc, 1);
-			c.EmitDelegate<Func<int, ModSurfaceBackgroundStyle, int>>((v, style) => {
-				if (style is IBackground) {
-					if (ConfectionWorld.ConfectionSurfaceBG[2] == -1) {
+			c.EmitDelegate<Func<int, ModSurfaceBackgroundStyle, int>>((v, style) =>
+			{
+				if (style is IBackground)
+				{
+					if (ConfectionWorld.ConfectionSurfaceBG[2] == -1)
+					{
 						ConfectionWorld.ConfectionSurfaceBG[2] = Main.rand.Next(bgVarAmount);
 						if (SecretChance)
 							ConfectionWorld.Secret = true;
@@ -365,16 +410,20 @@ namespace TheConfectionRebirth {
 		}
 
 		// close
-		private void TheConfectionRebirth_ModifyLimits3(ILContext il) {
+		private void TheConfectionRebirth_ModifyLimits3(ILContext il)
+		{
 			ILCursor c = new(il);
 			if (!c.TryGotoNext(i => i.MatchCallvirt(typeof(Asset<Texture2D>).GetMethod("get_Value"))))
 				return;
 
 			c.Index++;
 			c.Emit(OpCodes.Ldloc, 0);
-			c.EmitDelegate<Func<Texture2D, ModSurfaceBackgroundStyle, Texture2D>>((value, style) => {
-				if (style is IBackground) {
-					if (ConfectionWorld.ConfectionSurfaceBG[0] == -1) {
+			c.EmitDelegate<Func<Texture2D, ModSurfaceBackgroundStyle, Texture2D>>((value, style) =>
+			{
+				if (style is IBackground)
+				{
+					if (ConfectionWorld.ConfectionSurfaceBG[0] == -1)
+					{
 						ConfectionWorld.ConfectionSurfaceBG[0] = Main.rand.Next(bgVarAmount);
 						if (SecretChance)
 							ConfectionWorld.Secret = true;
@@ -393,9 +442,12 @@ namespace TheConfectionRebirth {
 				return;
 
 			c.Emit(OpCodes.Ldloc, 0);
-			c.EmitDelegate<Func<int, ModSurfaceBackgroundStyle, int>>((v, style) => {
-				if (style is IBackground) {
-					if (ConfectionWorld.ConfectionSurfaceBG[0] == -1) {
+			c.EmitDelegate<Func<int, ModSurfaceBackgroundStyle, int>>((v, style) =>
+			{
+				if (style is IBackground)
+				{
+					if (ConfectionWorld.ConfectionSurfaceBG[0] == -1)
+					{
 						ConfectionWorld.ConfectionSurfaceBG[0] = Main.rand.Next(bgVarAmount);
 						if (SecretChance)
 							ConfectionWorld.Secret = true;
@@ -414,9 +466,12 @@ namespace TheConfectionRebirth {
 				return;
 
 			c.Emit(OpCodes.Ldloc, 0);
-			c.EmitDelegate<Func<int, ModSurfaceBackgroundStyle, int>>((v, style) => {
-				if (style is IBackground) {
-					if (ConfectionWorld.ConfectionSurfaceBG[0] == -1) {
+			c.EmitDelegate<Func<int, ModSurfaceBackgroundStyle, int>>((v, style) =>
+			{
+				if (style is IBackground)
+				{
+					if (ConfectionWorld.ConfectionSurfaceBG[0] == -1)
+					{
 						ConfectionWorld.ConfectionSurfaceBG[0] = Main.rand.Next(bgVarAmount);
 						if (SecretChance)
 							ConfectionWorld.Secret = true;

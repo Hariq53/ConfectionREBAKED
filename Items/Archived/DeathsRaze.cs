@@ -1,11 +1,12 @@
-using Terraria.GameContent.Creative;
 using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace TheConfectionRebirth.Items.Archived
 {
-	public class DeathsRaze : ModItem {
-		public override void SetStaticDefaults() {
+	public class DeathsRaze : ModItem
+	{
+		public override void SetStaticDefaults()
+		{
 			Terraria.ID.ItemID.Sets.Deprecated[Type] = true;
 		}
 

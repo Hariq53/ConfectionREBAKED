@@ -1,6 +1,5 @@
 using Microsoft.Xna.Framework;
 using Terraria;
-using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 using TheConfectionRebirth.Projectiles;
@@ -21,17 +20,17 @@ namespace TheConfectionRebirth.Items.Weapons
 			Item.width = 50;
 			Item.height = 18;
 			Item.useTime = 4;
-			Item.useAnimation = 20; 
+			Item.useAnimation = 20;
 			Item.useStyle = ItemUseStyleID.Shoot;
-			Item.noMelee = true; 
-			Item.knockBack = 2; 
+			Item.noMelee = true;
+			Item.knockBack = 2;
 			Item.value = 500000;
-			Item.rare = ItemRarityID.Pink; 
+			Item.rare = ItemRarityID.Pink;
 			Item.UseSound = SoundID.Item34;
 			Item.autoReuse = true;
 			Item.shoot = ModContent.ProjectileType<CandleFlames>();
-			Item.shootSpeed = 9f; 
-			Item.useAmmo = AmmoID.Gel; 
+			Item.shootSpeed = 9f;
+			Item.useAmmo = AmmoID.Gel;
 		}
 
 		public override bool CanUseItem(Player player)
@@ -53,12 +52,12 @@ namespace TheConfectionRebirth.Items.Weapons
 			}
 		}
 
-        public override Vector2? HoldoutOffset()
+		public override Vector2? HoldoutOffset()
 		{
 			return new Vector2(0, -2);
 		}
-		
-		public override void AddRecipes() 
+
+		public override void AddRecipes()
 		{
 			CreateRecipe()
 				.AddIngredient(ModContent.ItemType<Items.Placeable.NeapoliniteBar>(), 12)

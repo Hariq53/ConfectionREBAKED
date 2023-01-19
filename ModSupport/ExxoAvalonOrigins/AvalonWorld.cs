@@ -45,9 +45,9 @@ public class AvalonWorld : ModSystem
         }
     }*/
 
-    /*public override void ModifyHardmodeTasks(List<GenPass> list)
-    {
-        int index = list.FindIndex(genpass => genpass.Name.Equals("Hardmode Good"));
-        list.Insert(index + 1, new PassLegacy("Confection REBAKED: Hardmode Good (Confected Altars)", new WorldGenLegacyMethod(World.ConfectedAltars.Method)));
-    }
+/*public override void ModifyHardmodeTasks(List<GenPass> list)
+{
+	int index = list.FindIndex(genpass => genpass.Name.Equals("Hardmode Good"));
+	list.Insert(index + 1, new PassLegacy("Confection REBAKED: Hardmode Good (Confected Altars)", new WorldGenLegacyMethod(World.ConfectedAltars.Method)));
+}
 }*/

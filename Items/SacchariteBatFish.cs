@@ -7,11 +7,13 @@ namespace TheConfectionRebirth.Items
 {
 	public class SacchariteBatFish : ModItem
 	{
-		public override void SetStaticDefaults() {
+		public override void SetStaticDefaults()
+		{
 			SacrificeTotal = 2;
 		}
 
-		public override void SetDefaults() {
+		public override void SetDefaults()
+		{
 			Item.questItem = true;
 			Item.maxStack = 1;
 			Item.width = 26;
@@ -20,11 +22,13 @@ namespace TheConfectionRebirth.Items
 			Item.rare = ItemRarityID.Quest;
 		}
 
-		public override bool IsQuestFish() {
+		public override bool IsQuestFish()
+		{
 			return true;
 		}
 
-		public override bool IsAnglerQuestAvailable() {
+		public override bool IsAnglerQuestAvailable()
+		{
 			return Main.hardMode;
 		}
 

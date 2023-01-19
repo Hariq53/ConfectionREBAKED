@@ -3,17 +3,17 @@ using Terraria.ModLoader;
 
 namespace TheConfectionRebirth.Buffs.NeapoliniteBuffs
 {
-    public class VanillaValorIV : ModBuff
-    {
-        public override void SetStaticDefaults()
-        {
-            Main.pvpBuff[Type] = true;
-            Main.buffNoSave[Type] = true;
-        }
+	public class VanillaValorIV : ModBuff
+	{
+		public override void SetStaticDefaults()
+		{
+			Main.pvpBuff[Type] = true;
+			Main.buffNoSave[Type] = true;
+		}
 
-        public override void Update(Player player, ref int buffIndex)
-        {
-            player.GetCritChance(DamageClass.Generic) += 8f;
-        }
-    }
+		public override void Update(Player player, ref int buffIndex)
+		{
+			player.GetCritChance(DamageClass.Generic) += 8f;
+		}
+	}
 }

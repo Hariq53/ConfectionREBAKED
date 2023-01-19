@@ -1,15 +1,13 @@
-using Microsoft.Xna.Framework;
 using Terraria;
-using Terraria.DataStructures;
-using Terraria.GameContent.Creative;
-using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace TheConfectionRebirth.Items.Archived
 {
-	public class SoulofSpite : ModItem {
-		public override void SetStaticDefaults() {
+	public class SoulofSpite : ModItem
+	{
+		public override void SetStaticDefaults()
+		{
 			Terraria.ID.ItemID.Sets.Deprecated[Type] = true;
 		}
 

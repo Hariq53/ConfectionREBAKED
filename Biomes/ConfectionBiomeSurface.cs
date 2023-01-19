@@ -1,5 +1,4 @@
 using Microsoft.Xna.Framework;
-using System;
 using Terraria;
 using Terraria.ModLoader;
 using TheConfectionRebirth.Backgrounds;
@@ -8,9 +7,9 @@ namespace TheConfectionRebirth.Biomes;
 
 public class ConfectionBiomeSurface : ModBiome
 {
-    public override ModWaterStyle WaterStyle => ModContent.Find<ModWaterStyle>("TheConfectionRebirth/CreamWaterStyle");
+	public override ModWaterStyle WaterStyle => ModContent.Find<ModWaterStyle>("TheConfectionRebirth/CreamWaterStyle");
 
-    public override SceneEffectPriority Priority => SceneEffectPriority.BiomeMedium;
+	public override SceneEffectPriority Priority => SceneEffectPriority.BiomeMedium;
 
 	public override ModSurfaceBackgroundStyle SurfaceBackgroundStyle
 	{
@@ -26,7 +25,7 @@ public class ConfectionBiomeSurface : ModBiome
 	}
 
 	public override ModUndergroundBackgroundStyle UndergroundBackgroundStyle
-    {
+	{
 		get
 		{
 			if (Main.LocalPlayer.ZoneSnow)
@@ -50,7 +49,7 @@ public class ConfectionBiomeSurface : ModBiome
 	public override string MapBackground => BackgroundPath;
 
 	public override string BackgroundPath
-    {
+	{
 		get
 		{
 			if (Main.LocalPlayer.ZoneRockLayerHeight && !Main.LocalPlayer.ZoneSnow && !Main.LocalPlayer.ZoneDesert)

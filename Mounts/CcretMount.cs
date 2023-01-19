@@ -1,21 +1,17 @@
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using System;
 using System.Linq;
-using System.Collections.Generic;
 using Terraria;
-using Terraria.DataStructures;
 using Terraria.ModLoader;
 
 namespace TheConfectionRebirth.Mounts
 {
 	public class CcretMount : ModMount
 	{
-		public override void SetStaticDefaults() {
+		public override void SetStaticDefaults()
+		{
 			MountData.jumpHeight = 50;
 			MountData.acceleration = 0.09f;
-			MountData.jumpSpeed = 9f; 
-			MountData.blockExtraJumps = false; 
+			MountData.jumpSpeed = 9f;
+			MountData.blockExtraJumps = false;
 			MountData.constantJump = false;
 			MountData.heightBoost = 0;
 			MountData.fallDamage = 0f;
@@ -54,7 +50,8 @@ namespace TheConfectionRebirth.Mounts
 			MountData.swimFrameDelay = MountData.inAirFrameDelay;
 			MountData.swimFrameStart = MountData.inAirFrameStart;
 
-			if (!Main.dedServ) {
+			if (!Main.dedServ)
+			{
 				MountData.textureWidth = MountData.backTexture.Width() + 20;
 				MountData.textureHeight = MountData.backTexture.Height();
 			}

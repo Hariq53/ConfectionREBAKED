@@ -1,8 +1,9 @@
-﻿namespace TheConfectionRebirth {
+﻿namespace TheConfectionRebirth
+{
 	public enum TimerDataType
-    {
-        MeleeDamage,
-        MagicManaRegeneration,
-        StrawberryStrikeDelay,
-    }
+	{
+		MeleeDamage,
+		MagicManaRegeneration,
+		StrawberryStrikeDelay,
+	}
 }

@@ -1,12 +1,13 @@
 using Terraria;
-using Terraria.ModLoader;
 using Terraria.ID;
+using Terraria.ModLoader;
 
 namespace TheConfectionRebirth.Items.Placeable
 {
 	public class YumBlockWall : ModItem
 	{
-		public override void SetDefaults() {
+		public override void SetDefaults()
+		{
 			Item.width = 12;
 			Item.height = 12;
 			Item.maxStack = 9999;
@@ -19,7 +20,8 @@ namespace TheConfectionRebirth.Items.Placeable
 			Item.createWall = ModContent.WallType<Walls.YumBlockWall>();
 		}
 
-		public override void AddRecipes() {
+		public override void AddRecipes()
+		{
 			Recipe recipe = CreateRecipe(4);
 			recipe.AddIngredient(ModContent.ItemType<YumBlock>());
 			recipe.AddTile(TileID.WorkBenches);

@@ -1,13 +1,10 @@
+using AltLibrary.Common.AltBiomes;
 using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using TheConfectionRebirth.Dusts;
-using AltLibrary;
-using AltLibrary.Common.AltBiomes;
-using AltLibrary.Common.Systems;
-using AltLibrary.Common.Hooks;
 
 namespace TheConfectionRebirth.Tiles
 {
@@ -40,63 +37,63 @@ namespace TheConfectionRebirth.Tiles
 	}
 	public class LavaCreamMoss : CreamMoss
 	{
-		public override Color mossColor => new Color(225, 88, 31);
+		public override Color mossColor => new(225, 88, 31);
 		public override int tileParent => TileID.LavaMoss;
 	}
 	public class KryptonCreamMoss : CreamMoss
 	{
-		public override Color mossColor => new Color(198, 248, 72);
+		public override Color mossColor => new(198, 248, 72);
 		public override int tileParent => TileID.KryptonMoss;
 	}
 	public class XenomCreamMoss : CreamMoss
 	{
-		public override Color mossColor => new Color(60, 206, 216);
+		public override Color mossColor => new(60, 206, 216);
 		public override int tileParent => TileID.XenonMoss;
 	}
 	public class ArgonCreamMoss : CreamMoss
 	{
-		public override Color mossColor => new Color(233, 98, 183);
+		public override Color mossColor => new(233, 98, 183);
 		public override int tileParent => TileID.ArgonMoss;
 	}
 	public abstract class CreamMoss : ModTile
-    {
-        public override string Texture => "TheConfectionRebirth/Tiles/Creamstone";
+	{
+		public override string Texture => "TheConfectionRebirth/Tiles/Creamstone";
 
 		public virtual Color mossColor => Color.White;
 		public virtual int tileParent => 0;
 
-		static void TileMerge(int thisTile, int other)
+		private static void TileMerge(int thisTile, int other)
 		{
 			Main.tileMerge[thisTile][other] = true;
 			Main.tileMerge[other][thisTile] = true;
 		}
-        public override void SetStaticDefaults()
-        {
-            Main.tileSolid[Type] = true;
-            Main.tileMergeDirt[Type] = true;
-            TileMerge(Type, Mod.Find<ModTile>("CookieBlock").Type);
-            TileMerge(Type, Mod.Find<ModTile>("CreamGrass").Type);
-            TileMerge(Type, Mod.Find<ModTile>("HallowedOre").Type);
-            TileMerge(Type, Mod.Find<ModTile>("NeapoliniteOre").Type);
-            TileMerge(Type, Mod.Find<ModTile>("CreamstoneBrick").Type);
-            TileMerge(Type, Mod.Find<ModTile>("SacchariteBlock").Type);
-            TileMerge(Type, Mod.Find<ModTile>("CreamWood").Type);
-            TileMerge(Type, Mod.Find<ModTile>("CreamBlock").Type);
-            TileMerge(Type, Mod.Find<ModTile>("BlueIce").Type);
-            TileMerge(Type, Mod.Find<ModTile>("CreamstoneRuby").Type);
-            TileMerge(Type, Mod.Find<ModTile>("CreamstoneSaphire").Type);
-            TileMerge(Type, Mod.Find<ModTile>("CreamstoneDiamond").Type);
-            TileMerge(Type, Mod.Find<ModTile>("CreamstoneAmethyst").Type);
-            TileMerge(Type, Mod.Find<ModTile>("CreamstoneTopaz").Type);
+		public override void SetStaticDefaults()
+		{
+			Main.tileSolid[Type] = true;
+			Main.tileMergeDirt[Type] = true;
+			TileMerge(Type, Mod.Find<ModTile>("CookieBlock").Type);
+			TileMerge(Type, Mod.Find<ModTile>("CreamGrass").Type);
+			TileMerge(Type, Mod.Find<ModTile>("HallowedOre").Type);
+			TileMerge(Type, Mod.Find<ModTile>("NeapoliniteOre").Type);
+			TileMerge(Type, Mod.Find<ModTile>("CreamstoneBrick").Type);
+			TileMerge(Type, Mod.Find<ModTile>("SacchariteBlock").Type);
+			TileMerge(Type, Mod.Find<ModTile>("CreamWood").Type);
+			TileMerge(Type, Mod.Find<ModTile>("CreamBlock").Type);
+			TileMerge(Type, Mod.Find<ModTile>("BlueIce").Type);
+			TileMerge(Type, Mod.Find<ModTile>("CreamstoneRuby").Type);
+			TileMerge(Type, Mod.Find<ModTile>("CreamstoneSaphire").Type);
+			TileMerge(Type, Mod.Find<ModTile>("CreamstoneDiamond").Type);
+			TileMerge(Type, Mod.Find<ModTile>("CreamstoneAmethyst").Type);
+			TileMerge(Type, Mod.Find<ModTile>("CreamstoneTopaz").Type);
 			TileMerge(Type, Mod.Find<ModTile>("CreamstoneEmerald").Type);
 			TileMerge(Type, Mod.Find<ModTile>("Creamstone").Type);
 			Main.tileBlockLight[Type] = true;
-            Main.tileLighted[Type] = false;
-            DustType = ModContent.DustType<CreamDust>();
-            ItemDrop = ModContent.ItemType<Items.Placeable.Creamstone>();
-            AddMapEntry(mossColor);
+			Main.tileLighted[Type] = false;
+			DustType = ModContent.DustType<CreamDust>();
+			ItemDrop = ModContent.ItemType<Items.Placeable.Creamstone>();
+			AddMapEntry(mossColor);
 
-			foreach(KeyValuePair<int, Color> entry in TilePostDraws.Moss.MossColor)
+			foreach (KeyValuePair<int, Color> entry in TilePostDraws.Moss.MossColor)
 			{
 				TileMerge(Type, entry.Key);
 			}
@@ -111,10 +108,10 @@ namespace TheConfectionRebirth.Tiles
 			TileMerge(Type, TileID.Stone);
 
 			HitSound = SoundID.Tink;
-            MinPick = 65;
-        }
+			MinPick = 65;
+		}
 
-        /*private bool SpawnRocks(int i, int j)
+		/*private bool SpawnRocks(int i, int j)
 	{
 		if (Main.tile[i, j - 1].type == 0 && Main.tile[i, j - 2].type == 0 && Main.rand.Next(6) == 0)
 		{
@@ -161,9 +158,9 @@ namespace TheConfectionRebirth.Tiles
 		    }
 	    }*/
 
-        public override void NumDust(int i, int j, bool fail, ref int num)
-        {
-            num = fail ? 1 : 3;
-        }
-    }
+		public override void NumDust(int i, int j, bool fail, ref int num)
+		{
+			num = fail ? 1 : 3;
+		}
+	}
 }

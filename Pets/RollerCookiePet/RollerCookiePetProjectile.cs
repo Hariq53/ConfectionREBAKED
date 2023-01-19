@@ -6,17 +6,20 @@ namespace TheConfectionRebirth.Pets.RollerCookiePet
 {
 	public class RollerCookiePetProjectile : ModProjectile
 	{
-		public override void SetStaticDefaults() {
+		public override void SetStaticDefaults()
+		{
 			Main.projPet[Projectile.type] = true;
 		}
 
-		public override void SetDefaults() {
+		public override void SetDefaults()
+		{
 			Projectile.CloneDefaults(ProjectileID.ZephyrFish);
 
 			AIType = ProjectileID.ZephyrFish;
 		}
 
-		public override bool PreAI() {
+		public override bool PreAI()
+		{
 			Player player = Main.player[Projectile.owner];
 
 			player.zephyrfish = false;
@@ -24,10 +27,12 @@ namespace TheConfectionRebirth.Pets.RollerCookiePet
 			return true;
 		}
 
-		public override void AI() {
+		public override void AI()
+		{
 			Player player = Main.player[Projectile.owner];
 
-			if (!player.dead && player.HasBuff(ModContent.BuffType<RollerCookiePet>())) {
+			if (!player.dead && player.HasBuff(ModContent.BuffType<RollerCookiePet>()))
+			{
 				Projectile.timeLeft = 2;
 			}
 		}

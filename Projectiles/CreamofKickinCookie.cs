@@ -2,14 +2,13 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using Terraria;
-using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace TheConfectionRebirth.Projectiles
 {
-    public class CreamofKickinCookie : ModProjectile
+	public class CreamofKickinCookie : ModProjectile
 	{
-        private const string ChainTexture = "TheConfectionRebirth/Projectiles/CreamofKickinCookieChain";
+		private const string ChainTexture = "TheConfectionRebirth/Projectiles/CreamofKickinCookieChain";
 
 		public override void SetDefaults()
 		{
@@ -18,7 +17,7 @@ namespace TheConfectionRebirth.Projectiles
 			Projectile.friendly = true;
 			Projectile.penetrate = -1;
 			Projectile.DamageType = DamageClass.Melee;
-		    Projectile.aiStyle = 15;
+			Projectile.aiStyle = 15;
 		}
 
 		public override bool PreDraw(ref Color lightColor)
@@ -41,7 +40,7 @@ namespace TheConfectionRebirth.Projectiles
 				chainSegmentLength = 10;
 			float chainRotation = unitVectorFromProjectileToPlayerArms.ToRotation() + MathHelper.PiOver2;
 			int chainCount = 0;
-			float chainLengthRemainingToDraw = vectorFromProjectileToPlayerArms.Length() + chainSegmentLength / 2f;
+			float chainLengthRemainingToDraw = vectorFromProjectileToPlayerArms.Length() + (chainSegmentLength / 2f);
 
 			while (chainLengthRemainingToDraw > 0f)
 			{

@@ -5,19 +5,19 @@ using TheConfectionRebirth.Dusts;
 
 namespace TheConfectionRebirth.Walls
 {
-    public class NeapoliniteBrickWall : ModWall
-    {
-        public override void SetStaticDefaults()
-        {
-            Main.wallHouse[Type] = true;
-            ItemDrop = ModContent.ItemType<Items.Placeable.NeapoliniteBrickWall>();
-            DustType = ModContent.DustType<NeapoliniteDust>();
-            AddMapEntry(new Color(115, 98, 62));
-        }
+	public class NeapoliniteBrickWall : ModWall
+	{
+		public override void SetStaticDefaults()
+		{
+			Main.wallHouse[Type] = true;
+			ItemDrop = ModContent.ItemType<Items.Placeable.NeapoliniteBrickWall>();
+			DustType = ModContent.DustType<NeapoliniteDust>();
+			AddMapEntry(new Color(115, 98, 62));
+		}
 
-        public override void NumDust(int i, int j, bool fail, ref int num)
-        {
-            num = fail ? 1 : 3;
-        }
-    }
+		public override void NumDust(int i, int j, bool fail, ref int num)
+		{
+			num = fail ? 1 : 3;
+		}
+	}
 }

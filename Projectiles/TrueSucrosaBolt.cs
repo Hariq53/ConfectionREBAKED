@@ -1,17 +1,13 @@
-using TheConfectionRebirth.Dusts;
-using System;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using Terraria;
-using Terraria.ID;
 using Terraria.ModLoader;
-using Terraria.Audio;
+using TheConfectionRebirth.Dusts;
 
 namespace TheConfectionRebirth.Projectiles
 {
-    public class TrueSucrosaBolt : ModProjectile
-    {
-        public override void SetDefaults()
+	public class TrueSucrosaBolt : ModProjectile
+	{
+		public override void SetDefaults()
 		{
 			Projectile.width = 32;
 			Projectile.height = 32;
@@ -22,23 +18,23 @@ namespace TheConfectionRebirth.Projectiles
 			Projectile.friendly = true;
 			Projectile.DamageType = DamageClass.Melee;
 		}
-		
+
 		public override Color? GetAlpha(Color lightColor)
 		{
-			if (this.Projectile.localAI[1] >= 15f)
+			if (Projectile.localAI[1] >= 15f)
 			{
-				return new Color(255, 255, 255, this.Projectile.alpha);
+				return new Color(255, 255, 255, Projectile.alpha);
 			}
-			if (this.Projectile.localAI[1] < 5f)
+			if (Projectile.localAI[1] < 5f)
 			{
 				return Color.Transparent;
 			}
-			int num7 = (int)((this.Projectile.localAI[1] - 5f) / 10f * 255f);
+			int num7 = (int)((Projectile.localAI[1] - 5f) / 10f * 255f);
 			return new Color(num7, num7, num7, num7);
 		}
-		
+
 		public override void AI()
-        {
+		{
 			if (Projectile.localAI[1] > 5f)
 			{
 				int num208 = Main.rand.Next(3);
@@ -59,13 +55,13 @@ namespace TheConfectionRebirth.Projectiles
 				dust.velocity *= 0.1f;
 			}
 		}
-		
-        public override void Kill(int timeLeft)
-        {
+
+		public override void Kill(int timeLeft)
+		{
 			for (int num394 = 4; num394 < 24; num394++)
 			{
-				float num395 = Projectile.oldVelocity.X * (30f / (float)num394);
-				float num396 = Projectile.oldVelocity.Y * (30f / (float)num394);
+				float num395 = Projectile.oldVelocity.X * (30f / num394);
+				float num396 = Projectile.oldVelocity.Y * (30f / num394);
 				int num397 = Main.rand.Next(3);
 				if (num397 == 0)
 				{
@@ -84,5 +80,5 @@ namespace TheConfectionRebirth.Projectiles
 				Main.dust[num398].noGravity = true;
 			}
 		}
-    }
+	}
 }

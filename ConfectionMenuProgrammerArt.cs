@@ -3,8 +3,10 @@ using ReLogic.Content;
 using Terraria.ModLoader;
 using TheConfectionRebirth.Backgrounds.MenuBackgrounds;
 
-namespace TheConfectionRebirth {
-	public class ConfectionMenuProgrammerArt : ModMenu {
+namespace TheConfectionRebirth
+{
+	public class ConfectionMenuProgrammerArt : ModMenu
+	{
 		private const string menuAssetPath = "TheConfectionRebirth/Assets";
 
 		public override Asset<Texture2D> Logo => ModContent.Request<Texture2D>($"{menuAssetPath}/LogoOld");

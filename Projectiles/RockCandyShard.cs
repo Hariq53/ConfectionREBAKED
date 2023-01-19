@@ -16,7 +16,7 @@ namespace TheConfectionRebirth.Projectiles
 			Projectile.DamageType = DamageClass.Magic;
 			Projectile.DamageType = DamageClass.Ranged;
 		}
-	
+
 		public override void AI()
 		{
 			Projectile.velocity.X *= 0.9f;

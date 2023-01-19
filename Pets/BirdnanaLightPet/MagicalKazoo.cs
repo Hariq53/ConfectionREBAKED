@@ -1,20 +1,21 @@
-﻿using Terraria;
-using Terraria.ID;
-using Terraria.GameContent.Creative;
-using Terraria.ModLoader;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
+using Terraria;
 using Terraria.Audio;
-using System;
+using Terraria.GameContent.Creative;
+using Terraria.ID;
+using Terraria.ModLoader;
 
 namespace TheConfectionRebirth.Pets.BirdnanaLightPet
 {
 	public class MagicalKazoo : ModItem
 	{
-		public override void SetStaticDefaults() {
+		public override void SetStaticDefaults()
+		{
 			CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
 		}
 
-		public override void SetDefaults() {
+		public override void SetDefaults()
+		{
 			Item.damage = 0;
 			Item.useStyle = 2;
 			Item.shoot = ModContent.ProjectileType<BirdnanaLightPetProjectile>();
@@ -45,8 +46,10 @@ namespace TheConfectionRebirth.Pets.BirdnanaLightPet
 			recipe.Register();
 		}
 
-		public override void UseStyle(Player player, Rectangle heldItemFrame) {
-			if (player.whoAmI == Main.myPlayer && player.itemTime == 0) {
+		public override void UseStyle(Player player, Rectangle heldItemFrame)
+		{
+			if (player.whoAmI == Main.myPlayer && player.itemTime == 0)
+			{
 				player.AddBuff(Item.buffType, 3600);
 			}
 		}

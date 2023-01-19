@@ -1,6 +1,4 @@
-using Microsoft.Xna.Framework;
 using Terraria;
-using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 using TheConfectionRebirth.Projectiles;
@@ -9,7 +7,7 @@ namespace TheConfectionRebirth.Items.Weapons
 {
 	public class TrueSucrosa : ModItem
 	{
-		public override void SetStaticDefaults() 
+		public override void SetStaticDefaults()
 		{
 			SacrificeTotal = 1;
 		}

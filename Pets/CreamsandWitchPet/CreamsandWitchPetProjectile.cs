@@ -6,12 +6,14 @@ namespace TheConfectionRebirth.Pets.CreamsandWitchPet
 {
 	public class CreamsandWitchPetProjectile : ModProjectile
 	{
-		public override void SetStaticDefaults() {
+		public override void SetStaticDefaults()
+		{
 			Main.projFrames[Projectile.type] = 10;
 			Main.projPet[Projectile.type] = true;
 		}
 
-		public override void SetDefaults() {
+		public override void SetDefaults()
+		{
 			Projectile.CloneDefaults(ProjectileID.PetLizard);
 
 			AIType = ProjectileID.PetLizard;
@@ -19,7 +21,8 @@ namespace TheConfectionRebirth.Pets.CreamsandWitchPet
 			Projectile.height = 45;
 		}
 
-		public override bool PreAI() {
+		public override bool PreAI()
+		{
 			Player player = Main.player[Projectile.owner];
 
 			player.lizard = false;
@@ -27,10 +30,12 @@ namespace TheConfectionRebirth.Pets.CreamsandWitchPet
 			return true;
 		}
 
-		public override void AI() {
+		public override void AI()
+		{
 			Player player = Main.player[Projectile.owner];
 
-			if (!player.dead && player.HasBuff(ModContent.BuffType<CreamsandWitchPet>())) {
+			if (!player.dead && player.HasBuff(ModContent.BuffType<CreamsandWitchPet>()))
+			{
 				Projectile.timeLeft = 2;
 			}
 		}

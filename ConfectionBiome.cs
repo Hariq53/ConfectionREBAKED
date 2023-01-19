@@ -1,22 +1,23 @@
 using AltLibrary;
 using AltLibrary.Common.AltBiomes;
-using AltLibrary.Common.Systems;
-using AltLibrary.Common.Hooks;
 using Microsoft.Xna.Framework;
 using System.Collections.Generic;
+using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using TheConfectionRebirth.Items;
 using TheConfectionRebirth.Items.Weapons;
 using TheConfectionRebirth.NPCs;
 using TheConfectionRebirth.Tiles;
-using Terraria;
 
-namespace TheConfectionRebirth {
-	internal class ConfectionBiome : AltBiome {
+namespace TheConfectionRebirth
+{
+	internal class ConfectionBiome : AltBiome
+	{
 		public override Color NameColor => new(210, 196, 145);
 
-		public override void SetStaticDefaults() {
+		public override void SetStaticDefaults()
+		{
 			BiomeType = BiomeType.Hallow;
 			BiomeGrass = ModContent.TileType<CreamGrass>();
 			BiomeStone = ModContent.TileType<Tiles.Creamstone>();
@@ -61,16 +62,19 @@ namespace TheConfectionRebirth {
 				.AddReplacement(73, (ushort)ModContent.WallType<Walls.PinkFairyFlossWall>());
 		}
 
-		public override int GetAltBlock(int BaseBlock, int posX, int posY) {
+		public override int GetAltBlock(int BaseBlock, int posX, int posY)
+		{
 			int grass = ModContent.TileType<CreamGrass>();
 			Tile tile = Main.tile[posX, posY];
-			if (tile.TileType == 59 && (Main.tile[posX - 1, posY].TileType == grass || Main.tile[posX + 1, posY].TileType == grass || Main.tile[posX, posY - 1].TileType == grass || Main.tile[posX, posY + 1].TileType == grass)) {
+			if (tile.TileType == 59 && (Main.tile[posX - 1, posY].TileType == grass || Main.tile[posX + 1, posY].TileType == grass || Main.tile[posX, posY - 1].TileType == grass || Main.tile[posX, posY + 1].TileType == grass))
+			{
 				return ModContent.TileType<CookieBlock>();
 			}
 			return base.GetAltBlock(BaseBlock, posX, posY);
 		}
 
-		public override Dictionary<int, int> SpecialConversion => new() {
+		public override Dictionary<int, int> SpecialConversion => new()
+		{
 			[TileID.Dirt] = ModContent.TileType<Tiles.CookieBlock>(),
 			[TileID.SnowBlock] = ModContent.TileType<Tiles.CreamBlock>(),
 			[TileID.Cloud] = ModContent.TileType<Tiles.PinkFairyFloss>(),

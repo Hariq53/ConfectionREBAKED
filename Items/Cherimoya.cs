@@ -9,7 +9,8 @@ namespace TheConfectionRebirth.Items
 {
 	public class Cherimoya : ModItem
 	{
-		public override void SetStaticDefaults() {
+		public override void SetStaticDefaults()
+		{
 			CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 5;
 
 			Main.RegisterItemAnimation(Type, new DrawAnimationVertical(int.MaxValue, 3));
@@ -23,7 +24,8 @@ namespace TheConfectionRebirth.Items
 			ItemID.Sets.IsFood[Type] = true;
 		}
 
-		public override void SetDefaults() {
+		public override void SetDefaults()
+		{
 			Item.DefaultToFood(22, 22, BuffID.WellFed2, 18000);
 			Item.value = Item.buyPrice(0, 20);
 			Item.rare = ItemRarityID.Orange;

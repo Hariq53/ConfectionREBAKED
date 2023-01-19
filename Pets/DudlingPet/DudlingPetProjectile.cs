@@ -6,12 +6,14 @@ namespace TheConfectionRebirth.Pets.DudlingPet
 {
 	public class DudlingPetProjectile : ModProjectile
 	{
-		public override void SetStaticDefaults() {
+		public override void SetStaticDefaults()
+		{
 			Main.projFrames[Projectile.type] = 10;
 			Main.projPet[Projectile.type] = true;
 		}
 
-		public override void SetDefaults() {
+		public override void SetDefaults()
+		{
 			Projectile.CloneDefaults(ProjectileID.PetLizard);
 
 			AIType = ProjectileID.PetLizard;
@@ -19,7 +21,8 @@ namespace TheConfectionRebirth.Pets.DudlingPet
 			Projectile.height = 46;
 		}
 
-		public override bool PreAI() {
+		public override bool PreAI()
+		{
 			Player player = Main.player[Projectile.owner];
 
 			player.lizard = false;
@@ -27,10 +30,12 @@ namespace TheConfectionRebirth.Pets.DudlingPet
 			return true;
 		}
 
-		public override void AI() {
+		public override void AI()
+		{
 			Player player = Main.player[Projectile.owner];
 
-			if (!player.dead && player.HasBuff(ModContent.BuffType<DudlingPet>())) {
+			if (!player.dead && player.HasBuff(ModContent.BuffType<DudlingPet>()))
+			{
 				Projectile.timeLeft = 2;
 			}
 		}

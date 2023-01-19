@@ -1,12 +1,12 @@
-﻿using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
+using System.IO;
 using Terraria;
+using Terraria.Audio;
+using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
-using Terraria.GameContent;
-using Terraria.Audio;
-using System.IO;
 
 namespace TheConfectionRebirth.Projectiles
 {
@@ -51,7 +51,7 @@ namespace TheConfectionRebirth.Projectiles
 			Player owner = Main.player[Projectile.owner];
 			Projectile.rotation = Projectile.velocity.ToRotation() + MathHelper.PiOver2;
 
-			Projectile.Center = Main.GetPlayerArmPosition(Projectile) + Projectile.velocity * Timer;
+			Projectile.Center = Main.GetPlayerArmPosition(Projectile) + (Projectile.velocity * Timer);
 			Projectile.spriteDirection = Projectile.velocity.X >= 0f ? 1 : -1;
 
 			/*if (!Charge(owner))

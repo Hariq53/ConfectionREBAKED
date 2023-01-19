@@ -3,11 +3,11 @@ using Terraria.ModLoader;
 
 namespace TheConfectionRebirth.Buffs
 {
-    class GoneBananas : ModBuff
-    {
-        public override void SetStaticDefaults()
-        {
-            Main.debuff[Type] = true;
-        }
-    }
+	internal class GoneBananas : ModBuff
+	{
+		public override void SetStaticDefaults()
+		{
+			Main.debuff[Type] = true;
+		}
+	}
 }

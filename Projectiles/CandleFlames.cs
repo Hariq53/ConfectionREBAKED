@@ -1,5 +1,4 @@
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -12,11 +11,11 @@ namespace TheConfectionRebirth.Projectiles
 		{
 			Projectile.width = 6;
 			Projectile.height = 6;
-			Projectile.alpha = 255; 
-			Projectile.friendly = true; 
-			Projectile.hostile = false; 
-			Projectile.penetrate = 3; 
-			Projectile.timeLeft = 90; 
+			Projectile.alpha = 255;
+			Projectile.friendly = true;
+			Projectile.hostile = false;
+			Projectile.penetrate = 3;
+			Projectile.timeLeft = 90;
 			Projectile.ignoreWater = false;
 			Projectile.tileCollide = true;
 			Projectile.DamageType = DamageClass.Ranged;
@@ -27,7 +26,7 @@ namespace TheConfectionRebirth.Projectiles
 		{
 			if (Projectile.wet)
 			{
-				Projectile.Kill(); 
+				Projectile.Kill();
 			}
 			float dustScale = 1f;
 			if (Projectile.ai[0] == 0f)
@@ -37,10 +36,12 @@ namespace TheConfectionRebirth.Projectiles
 			else if (Projectile.ai[0] == 2f)
 				dustScale = 0.75f;
 
-			if (Main.rand.Next(2) == 0) {
+			if (Main.rand.Next(2) == 0)
+			{
 				Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, 6, Projectile.velocity.X * 0.2f, Projectile.velocity.Y * 0.2f, 100);
-				
-				if (Main.rand.NextBool(3)) {
+
+				if (Main.rand.NextBool(3))
+				{
 					dust.noGravity = true;
 					dust.scale *= 3f;
 					dust.velocity.X *= 2f;
@@ -54,10 +55,10 @@ namespace TheConfectionRebirth.Projectiles
 			Projectile.ai[0] += 1f;
 		}
 
-        public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
-        {
+		public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
+		{
 			target.AddBuff(BuffID.OnFire3, 1200);
-        }
+		}
 
 		public override void OnHitPlayer(Player target, int damage, bool crit)
 		{

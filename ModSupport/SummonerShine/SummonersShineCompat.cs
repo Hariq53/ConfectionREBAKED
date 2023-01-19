@@ -3,9 +3,6 @@ using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.ModLoader;
@@ -19,10 +16,10 @@ namespace TheConfectionRebirth
 	/// <summary>
 	/// Central file used for mod.Call wrappers.
 	/// </summary>
-	
+
 	internal class SummonersShineCompat : ModSystem
 	{
-		internal static readonly Version apiVersion = new Version(0, 0, 1);
+		internal static readonly Version apiVersion = new(0, 0, 1);
 
 		internal static Mod SummonersShine
 		{
@@ -636,7 +633,7 @@ namespace TheConfectionRebirth
 
 		internal class MinionPowerCollection
 		{
-			List<Tuple<float, int, int, bool>> minionPowers = new();
+			private List<Tuple<float, int, int, bool>> minionPowers = new();
 
 			/// <summary>
 			/// Call this to feed data into ModSupport_AddItemStatics. Adds a Minion Power to the Minion Power Collection
@@ -1507,11 +1504,11 @@ namespace TheConfectionRebirth
 		{
 			return (bool)SummonersShineCompat.SummonersShine.Call(10, 9, projectile, MaxTicks, DefaultEnergyRegenMult);
 		}
-		
+
 		/// <summary>
-		 /// Increments the special ability timer, automatically resetting CastingSpecialAbilityTime, EnergyRegenRateMult, and calling MinionTerminateSpecialAbility if MaxTicks is reached.
-		 /// </summary>
-		 /// <param name="SourceItemID">The projectile's source item</param>
+		/// Increments the special ability timer, automatically resetting CastingSpecialAbilityTime, EnergyRegenRateMult, and calling MinionTerminateSpecialAbility if MaxTicks is reached.
+		/// </summary>
+		/// <param name="SourceItemID">The projectile's source item</param>
 		public static void OverrideSourceItem(this Projectile projectile, int sourceItemID)
 		{
 			SummonersShine.Call(10, 11, projectile, sourceItemID);
@@ -1531,7 +1528,8 @@ namespace TheConfectionRebirth
 		/// Tuple.Item2: All minions' special power recharge progress fraction (ranges from 0-1)
 		/// </summary>
 		/// <param name="itemID">The projectile's source item</param>
-		public static Tuple<List<Projectile>, List<float>> GetPlayerMinionCollectionData(this Player player, int itemID) {
+		public static Tuple<List<Projectile>, List<float>> GetPlayerMinionCollectionData(this Player player, int itemID)
+		{
 
 			return (Tuple<List<Projectile>, List<float>>)SummonersShine.Call(10, 14, player, itemID);
 		}
@@ -1541,7 +1539,7 @@ namespace TheConfectionRebirth
 		/// </summary>
 		/// <param name="owner">The item's owner</param>
 		public static void ForciblyUseSpecialAbility(this Item item, Player owner)
-        {
+		{
 			SummonersShine.Call(10, 15, item, owner);
 		}
 
