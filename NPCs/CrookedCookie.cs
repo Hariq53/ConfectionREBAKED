@@ -61,13 +61,10 @@ namespace TheConfectionRebirth.NPCs
 
 			if (NPC.life <= 0)
 			{
-				var entitySource = NPC.GetSource_Death();
-
-				for (int i = 0; i < 1; i++)
-				{
-					Gore.NewGore(entitySource, NPC.position, new Vector2(Main.rand.Next(-6, 7), Main.rand.Next(-6, 7)), Mod.Find<ModGore>("CrookedCookieGore1").Type);
-					Gore.NewGore(entitySource, NPC.position, new Vector2(Main.rand.Next(-6, 7), Main.rand.Next(-6, 7)), Mod.Find<ModGore>("CrookedCookieGore2").Type);
-				}
+				Utilities.SpawnDeathGore(NPC, Mod,
+					"CrookedCookieGore1",
+					"CrookedCookieGore2"
+				);
 			}
 		}
 	}

@@ -8,7 +8,6 @@ namespace TheConfectionRebirth.NPCs
 {
 	public class CreamsandWitchPhase1 : ModNPC
 	{
-
 		public override void SetStaticDefaults()
 		{
 			NPCID.Sets.NPCBestiaryDrawModifiers value = new(0)
@@ -35,38 +34,50 @@ namespace TheConfectionRebirth.NPCs
 			SpawnModBiomes = new int[1] { ModContent.GetInstance<SandConfectionSurfaceBiome>().Type };
 		}
 
-		public override void FindFrame(int frameHeight)
-		{
-			NPC.spriteDirection = NPC.direction;
-		}
+		public override void FindFrame(int frameHeight) => NPC.spriteDirection = NPC.direction;
 
 		public override void AI()
 		{
 			NPC.ai[0] += 1f;
+
 			if (Main.rand.NextBool(1000) && NPC.CountNPCS(ModContent.NPCType<CrookedCookie>()) < 25)
-			{
-				NPC.ai[0] = 0f;
-				int i = NPC.NewNPC(NPC.GetSource_FromAI(), (int)NPC.Center.X, (int)NPC.Center.Y, ModContent.NPCType<CrookedCookie>(), 0, NPC.whoAmI);
-				Main.npc[i].velocity.X = Main.rand.NextFloat(-0.4f, 0.4f);
-				Main.npc[i].velocity.Y = Main.rand.NextFloat(-0.5f, -0.05f);
-				if (Main.netMode == NetmodeID.MultiplayerClient)
-					NetMessage.SendData(MessageID.SyncNPC, number: i);
-			}
+				SpawnAlly(ModContent.NPCType<CrookedCookie>());
+
 			NPC.ai[0] += 2f;
+
 			if (Main.rand.NextBool(1000) && NPC.CountNPCS(ModContent.NPCType<MintJr>()) < 25)
-			{
-				NPC.ai[0] = 0f;
-				int i = NPC.NewNPC(NPC.GetSource_FromAI(), (int)NPC.Center.X, (int)NPC.Center.Y, ModContent.NPCType<MintJr>(), 0, NPC.whoAmI);
-				Main.npc[i].velocity.X = Main.rand.NextFloat(-0.4f, 0.4f);
-				Main.npc[i].velocity.Y = Main.rand.NextFloat(-0.5f, -0.05f);
-				if (Main.netMode == NetmodeID.MultiplayerClient)
-					NetMessage.SendData(MessageID.SyncNPC, number: i);
-			}
+				SpawnAlly(ModContent.NPCType<MintJr>());
+		}
+
+		private void SpawnAlly(int type)
+		{
+			NPC.ai[0] = 0f;
+			var ally =
+				NPC.NewNPCDirect
+				(
+					source: NPC.GetSource_FromAI(),
+					(int)NPC.Center.X,
+					(int)NPC.Center.Y,
+					type,
+					ai0: NPC.whoAmI
+				);
+
+			ally.velocity.X = Main.rand.NextFloat(-0.4f, 0.4f);
+			ally.velocity.Y = Main.rand.NextFloat(-0.5f, -0.05f);
+
+			if (Main.netMode == NetmodeID.MultiplayerClient)
+				NetMessage.SendData(MessageID.SyncNPC, number: ally.whoAmI);
 		}
 
 		public override float SpawnChance(NPCSpawnInfo spawnInfo)
 		{
-			if (spawnInfo.Player.InModBiome(ModContent.GetInstance<SandConfectionSurfaceBiome>()) && !spawnInfo.Player.ZoneOldOneArmy && !spawnInfo.Player.ZoneTowerNebula && !spawnInfo.Player.ZoneTowerSolar && !spawnInfo.Player.ZoneTowerStardust && !spawnInfo.Player.ZoneTowerVortex && !spawnInfo.Invasion)
+			if (spawnInfo.Player.InModBiome(ModContent.GetInstance<SandConfectionSurfaceBiome>())
+				&& !spawnInfo.Player.ZoneOldOneArmy
+				&& !spawnInfo.Player.ZoneTowerNebula
+				&& !spawnInfo.Player.ZoneTowerSolar
+				&& !spawnInfo.Player.ZoneTowerStardust
+				&& !spawnInfo.Player.ZoneTowerVortex
+				&& !spawnInfo.Invasion)
 			{
 				return 0.01f;
 			}
@@ -76,23 +87,28 @@ namespace TheConfectionRebirth.NPCs
 		public override void HitEffect(int hitDirection, double damage)
 		{
 			if (Main.netMode == NetmodeID.Server)
-			{
 				return;
-			}
 
 			if (NPC.life <= 0)
-			{
-				Vector2 spawnAt = NPC.Center + new Vector2(0f, NPC.height / 2f);
-				NPC.NewNPC(NPC.GetSource_FromAI(), (int)spawnAt.X, (int)spawnAt.Y, ModContent.NPCType<CreamsandWitchPhase2>());
+				SpawnPhase2NPC();
+		}
 
-				var entitySource = NPC.GetSource_Death();
+		private void SpawnPhase2NPC()
+		{
+			Vector2 spawnPos = NPC.Center + new Vector2(0f, NPC.height / 2f);
 
-				for (int i = 0; i < 1; i++)
-				{
-					Gore.NewGore(entitySource, NPC.position, new Vector2(Main.rand.Next(-6, 7), Main.rand.Next(-6, 7)), Mod.Find<ModGore>("CreamsandWitchBroomGore1").Type);
-					Gore.NewGore(entitySource, NPC.position, new Vector2(Main.rand.Next(-6, 7), Main.rand.Next(-6, 7)), Mod.Find<ModGore>("CreamsandWitchBroomGore2").Type);
-				}
-			}
+			NPC.NewNPC
+			(
+				source: NPC.GetSource_FromAI(),
+				(int)spawnPos.X,
+				(int)spawnPos.Y,
+				ModContent.NPCType<CreamsandWitchPhase2>()
+			);
+
+			Utilities.SpawnDeathGore(NPC, Mod,
+				"CreamsandWitchBroomGore1",
+				"CreamsandWitchBroomGore2"
+			);
 		}
 	}
 }

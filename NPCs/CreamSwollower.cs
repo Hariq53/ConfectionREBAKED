@@ -55,15 +55,36 @@ namespace TheConfectionRebirth.NPCs
 
 		public override void ModifyNPCLoot(NPCLoot npcLoot)
 		{
-			npcLoot.Add(ItemDropRule.Common(ItemID.SharkFin, 8, 1, 1));
-			npcLoot.Add(ItemDropRule.Food(ItemID.Nachos, 30, 1, 1));
-			npcLoot.Add(ItemDropRule.Common(ItemID.LightShard, 25, 1, 1));
-			npcLoot.Add(ItemDropRule.ByCondition(new Conditions.WindyEnoughForKiteDrops(), ItemID.KiteSandShark, 25, 1, 1, 1));
+			Utilities.NPCLootAddRange(npcLoot,
+				ItemDropRule.Common
+				(
+					ItemID.SharkFin,
+					chanceDenominator: 8
+				),
+				ItemDropRule.Food
+				(
+					ItemID.Nachos,
+					chanceDenominator: 30
+				),
+				ItemDropRule.Common
+				(
+					ItemID.LightShard,
+					chanceDenominator: 25
+				),
+				ItemDropRule.ByCondition
+				(
+					new Conditions.WindyEnoughForKiteDrops(),
+					ItemID.KiteSandShark,
+					chanceDenominator: 25
+				)
+			);
 		}
 
 		public override float SpawnChance(NPCSpawnInfo spawnInfo)
 		{
-			if (spawnInfo.Player.ZoneSandstorm && spawnInfo.Player.InModBiome(ModContent.GetInstance<SandConfectionSurfaceBiome>()) && !spawnInfo.AnyInvasionActive())
+			if (spawnInfo.Player.ZoneSandstorm
+				&& spawnInfo.Player.InModBiome(ModContent.GetInstance<SandConfectionSurfaceBiome>())
+				&& !spawnInfo.AnyInvasionActive())
 			{
 				return 0.5f;
 			}
@@ -79,15 +100,12 @@ namespace TheConfectionRebirth.NPCs
 
 			if (NPC.life <= 0)
 			{
-				var entitySource = NPC.GetSource_Death();
-
-				for (int i = 0; i < 1; i++)
-				{
-					Gore.NewGore(entitySource, NPC.position, new Vector2(Main.rand.Next(-6, 7), Main.rand.Next(-6, 7)), Mod.Find<ModGore>("CreamSwollowerGore1").Type);
-					Gore.NewGore(entitySource, NPC.position, new Vector2(Main.rand.Next(-6, 7), Main.rand.Next(-6, 7)), Mod.Find<ModGore>("CreamSwollowerGore2").Type);
-					Gore.NewGore(entitySource, NPC.position, new Vector2(Main.rand.Next(-6, 7), Main.rand.Next(-6, 7)), Mod.Find<ModGore>("CreamSwollowerGore3").Type);
-					Gore.NewGore(entitySource, NPC.position, new Vector2(Main.rand.Next(-6, 7), Main.rand.Next(-6, 7)), Mod.Find<ModGore>("CreamSwollowerGore4").Type);
-				}
+				Utilities.SpawnDeathGore(NPC, Mod,
+					"CreamSwollowerGore1",
+					"CreamSwollowerGore2",
+					"CreamSwollowerGore3",
+					"CreamSwollowerGore4"
+				);
 			}
 		}
 	}

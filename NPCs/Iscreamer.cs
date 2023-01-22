@@ -24,20 +24,52 @@ namespace TheConfectionRebirth.NPCs
 
 		public override void Load()
 		{
-			VariationsManager<Iscreamer>.AddVariation(new("Strawberry", ModContent.Request<Texture2D>(Texture)));
-			VariationsManager<Iscreamer>.AddVariation(new("Cream", ModContent.Request<Texture2D>(Texture + "_Cream")));
-			VariationsManager<Iscreamer>.AddVariation(new("Chocolate", ModContent.Request<Texture2D>(Texture + "_Chocolate")));
-			VariationsManager<Iscreamer>.AddVariation(new("Mint", ModContent.Request<Texture2D>(Texture + "_Mint")));
-			VariationsManager<Iscreamer>.AddVariation(new("Orange", ModContent.Request<Texture2D>(Texture + "_Orange")));
-			VariationsManager<Iscreamer>.AddVariation(new("Blueberry", ModContent.Request<Texture2D>(Texture + "_Blueberry")));
-			VariationsManager<Iscreamer>.AddVariation(new("Snow", ModContent.Request<Texture2D>(Texture + "_Snow"), () => Main.SceneMetrics.EnoughTilesForSnow));
+			VariationsManager<Iscreamer>.AddVariationRange
+			(
+				new NPCVariation
+				(
+					"Strawberry",
+					ModContent.Request<Texture2D>(Texture)
+				),
+				new NPCVariation
+				(
+					"Cream",
+					ModContent.Request<Texture2D>(Texture + "_Cream")
+				),
+				new NPCVariation
+				(
+					"Chocolate",
+					ModContent.Request<Texture2D>(Texture + "_Chocolate")
+				),
+				new NPCVariation
+				(
+					"Mint",
+					ModContent.Request<Texture2D>(Texture + "_Mint")
+				),
+				new NPCVariation
+				(
+					"Orange",
+					ModContent.Request<Texture2D>(Texture + "_Orange")
+				),
+				new
+				(
+					"Blueberry",
+					ModContent.Request<Texture2D>(Texture + "_Blueberry")
+				),
+				new
+				(
+					"Snow",
+					ModContent.Request<Texture2D>(Texture + "_Snow"),
+					() => Main.SceneMetrics.EnoughTilesForSnow
+				)
+			);
 		}
 
 		public override void Unload() => VariationsManager<Iscreamer>.ClearVariations();
 
 		public override void SetStaticDefaults()
 		{
-			Main.npcFrameCount[NPC.type] = 4;
+			Main.npcFrameCount[NPC.type] = FrameCount = 4;
 		}
 
 		public override void SetDefaults()
@@ -72,41 +104,32 @@ namespace TheConfectionRebirth.NPCs
 		public override void HitEffect(int hitDirection, double damage)
 		{
 			if (Main.netMode == NetmodeID.Server)
-			{
 				return;
-			}
 
 			if (NPC.life <= 0)
-			{
-				var entitySource = NPC.GetSource_Death();
-
-				for (int i = 0; i < 3; i++)
-				{
-					Gore.NewGore(entitySource, NPC.position, new Vector2(Main.rand.Next(-6, 7), Main.rand.Next(-6, 7)), 13);
-					Gore.NewGore(entitySource, NPC.position, new Vector2(Main.rand.Next(-6, 7), Main.rand.Next(-6, 7)), 12);
-					Gore.NewGore(entitySource, NPC.position, new Vector2(Main.rand.Next(-6, 7), Main.rand.Next(-6, 7)), 11);
-				}
-			}
+				Utilities.SpawnDeathGore(NPC);
 		}
 
-		private const int speed = 10;
-		private const int maxFrames = 3;
-		private int frame;
+		private static int AnimationLenght => 10;
+
+		// Stored in a property for fast access instead of using Main.npcFrameCount each time
+		private static int FrameCount { get; set; }
+
 		public override void FindFrame(int frameHeight)
 		{
-			NPC.frameCounter++;
-			if (NPC.frameCounter >= speed)
-			{
-				frame++;
-				NPC.frameCounter = 0;
-			}
+			int frame = (int)NPC.frameCounter++ / AnimationLenght;
 
-			if (frame > maxFrames)
+			if (frame > FrameCount - 1)
+			{
 				frame = 0;
+				NPC.frameCounter = 0d;
+			}
 
 			NPC.frame.Y = frame * frameHeight;
 			NPC.spriteDirection = NPC.direction;
 		}
+
+		private Player TargetPlayer => Main.player[NPC.target];
 
 		public override bool PreAI()
 		{
@@ -131,13 +154,10 @@ namespace TheConfectionRebirth.NPCs
 
 		public override void AI()
 		{
-			int num184 = (int)(NPC.Center.X / 16f);
-			int num185 = (int)(NPC.Center.Y / 16f);
 			if (++NPC.ai[3] >= 60f * 10f)
 			{
-				Player player = Main.player[NPC.target];
-				Point playerPos = new((int)(player.Center.X / 16), (int)(player.Center.Y / 16));
-				List<Tuple<int, int>> floodFindResults = Util.FloodFindFuncs.FloodFind(playerPos, 16, 25);
+				Point playerPos = new((int)TargetPlayer.Center.X / 16, (int)TargetPlayer.Center.Y / 16);
+				var floodFindResults = Util.FloodFindFuncs.FloodFind(playerPos, 16, 25);
 				NPC.ai[3] = 0f;
 				if (floodFindResults.Count == 0)
 					return;
@@ -204,26 +224,49 @@ namespace TheConfectionRebirth.NPCs
 				Vector2 westPosFar = npc.Center - new Vector2(Closeness * (float)Math.Sin(radians), Closeness * (float)Math.Cos(radians));
 				Vector2 northPosFar = npc.Center + new Vector2(Closeness * (float)Math.Sin(radians + 1.57), Closeness * (float)Math.Cos(radians + 1.57));
 				Vector2 southPosFar = npc.Center - new Vector2(Closeness * (float)Math.Sin(radians + 1.57), Closeness * (float)Math.Cos(radians + 1.57));
-				int d5 = Dust.NewDust(position, 2, 2, 159, 0f, 0f, 0, new Color(209, 255, 0));
-				int d6 = Dust.NewDust(westPosFar, 2, 2, 159, 0f, 0f, 0, new Color(209, 255, 0));
-				int d7 = Dust.NewDust(northPosFar, 2, 2, 159, 0f, 0f, 0, new Color(209, 255, 0));
-				int d8 = Dust.NewDust(southPosFar, 2, 2, 159, 0f, 0f, 0, new Color(209, 255, 0));
-				Vector2 position2 = npc.Center + new Vector2((Closeness - 30f) * (float)Math.Sin(radians), (Closeness - 30f) * (float)Math.Cos(radians));
-				Vector2 westPosClose = npc.Center - new Vector2((Closeness - 30f) * (float)Math.Sin(radians), (Closeness - 30f) * (float)Math.Cos(radians));
-				Vector2 northPosClose = npc.Center + new Vector2((Closeness - 30f) * (float)Math.Sin(radians + 1.57), (Closeness - 30f) * (float)Math.Cos(radians + 1.57));
-				Vector2 southPosClose = npc.Center - new Vector2((Closeness - 30f) * (float)Math.Sin(radians + 1.57), (Closeness - 30f) * (float)Math.Cos(radians + 1.57));
+				Dust.NewDust(position, 2, 2, DustID.Teleporter, 0f, 0f, 0, new Color(209, 255, 0));
+				Dust.NewDust(westPosFar, 2, 2, DustID.Teleporter, 0f, 0f, 0, new Color(209, 255, 0));
+				Dust.NewDust(northPosFar, 2, 2, DustID.Teleporter, 0f, 0f, 0, new Color(209, 255, 0));
+				Dust.NewDust(southPosFar, 2, 2, DustID.Teleporter, 0f, 0f, 0, new Color(209, 255, 0));
 			}
 			SoundEngine.PlaySound(new SoundStyle("TheConfectionRebirth/Sounds/Custom/IceScreamerShriek"));
 		}
 
 		public override void ModifyNPCLoot(NPCLoot npcLoot)
 		{
-			npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<BearClaw>(), 100));
+			Utilities.NPCLootAddRange(npcLoot,
+				ItemDropRule.Common
+				(
+					ModContent.ItemType<BearClaw>(),
+					chanceDenominator: 100
+				),
+				ItemDropRule.Food
+				(
+					ModContent.ItemType<Brownie>(),
+					chanceDenominator: 150
+				)
+			);
 
-			npcLoot.Add(new LeadingConditionRule(new Conditions.TenthAnniversaryIsUp())).OnSuccess(ItemDropRule.Common(ModContent.ItemType<DimensionSplit>(), 100));
-			npcLoot.Add(new LeadingConditionRule(new Conditions.TenthAnniversaryIsNotUp())).OnSuccess(ItemDropRule.NormalvsExpert(ModContent.ItemType<DimensionSplit>(), 500, 400));
+			npcLoot.Add(new LeadingConditionRule(new Conditions.TenthAnniversaryIsUp()))
+				.OnSuccess
+				(
+					ItemDropRule.Common
+					(
+						ModContent.ItemType<DimensionSplit>(),
+						chanceDenominator: 100
+					)
+				);
 
-			npcLoot.Add(ItemDropRule.Food(ModContent.ItemType<Brownie>(), 150));
+			npcLoot.Add(new LeadingConditionRule(new Conditions.TenthAnniversaryIsNotUp()))
+				.OnSuccess
+				(
+					ItemDropRule.NormalvsExpert
+					(
+						ModContent.ItemType<DimensionSplit>(),
+						chanceDenominatorInNormal: 500,
+						chanceDenominatorInExpert: 400
+					)
+				);
 		}
 
 		public override float SpawnChance(NPCSpawnInfo spawnInfo)

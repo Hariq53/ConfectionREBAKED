@@ -13,8 +13,7 @@ namespace TheConfectionRebirth.NPCs
 {
 	public class FoaminFloat : ModNPC
 	{
-
-		private Player player;
+		private Player? TargetPlayer => NPC.target == -1 ? null : Main.player[NPC.target];
 
 		public override void SetStaticDefaults()
 		{
@@ -55,7 +54,8 @@ namespace TheConfectionRebirth.NPCs
 
 		public override float SpawnChance(NPCSpawnInfo spawnInfo)
 		{
-			if (spawnInfo.Player.InModBiome(ModContent.GetInstance<ConfectionUndergroundBiome>()) && !spawnInfo.AnyInvasionActive())
+			if (spawnInfo.Player.InModBiome(ModContent.GetInstance<ConfectionUndergroundBiome>())
+				&& !spawnInfo.AnyInvasionActive())
 			{
 				return 0.1f;
 			}
@@ -65,7 +65,9 @@ namespace TheConfectionRebirth.NPCs
 		public override void AI()
 		{
 			Target();
-			if (player != null && Collision.CanHit(NPC, player) && --NPC.ai[1] <= 0f)
+			if (TargetPlayer is not null
+				&& Collision.CanHit(NPC, TargetPlayer)
+				&& --NPC.ai[1] <= 0f)
 			{
 				Shoot();
 			}
@@ -74,7 +76,6 @@ namespace TheConfectionRebirth.NPCs
 		private void Target()
 		{
 			NPC.TargetClosest();
-			player = NPC.target == -1 ? null : Main.player[NPC.target];
 		}
 
 		private void Shoot()
@@ -83,20 +84,26 @@ namespace TheConfectionRebirth.NPCs
 				return;
 
 			int type = Mod.Find<ModProjectile>("CreamySprayEvil").Type;
-			Vector2 velocity = player.Center - NPC.Center;
+			Vector2 velocity = TargetPlayer!.Center - NPC.Center;
 			float magnitude = Magnitude(velocity);
+
 			if (magnitude > 0f)
-			{
 				velocity *= 5f / magnitude;
-			}
-			Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, velocity, type, NPC.damage, 2f);
+
+			Projectile.NewProjectile
+			(
+				spawnSource: NPC.GetSource_FromAI(),
+				position: NPC.Center,
+				velocity,
+				type,
+				NPC.damage,
+				KnockBack: 2f
+			);
+
 			NPC.ai[1] = 200f;
 		}
 
-		private float Magnitude(Vector2 mag)
-		{
-			return (float)Math.Sqrt((mag.X * mag.X) + (mag.Y * mag.Y));
-		}
+		private static float Magnitude(Vector2 mag) => MathF.Sqrt((mag.X * mag.X) + (mag.Y * mag.Y));
 
 		public override void ScaleExpertStats(int numPlayers, float bossLifeScale)
 		{
@@ -111,21 +118,10 @@ namespace TheConfectionRebirth.NPCs
 		public override void HitEffect(int hitDirection, double damage)
 		{
 			if (Main.netMode == NetmodeID.Server)
-			{
 				return;
-			}
 
 			if (NPC.life <= 0)
-			{
-				var entitySource = NPC.GetSource_Death();
-
-				for (int i = 0; i < 3; i++)
-				{
-					Gore.NewGore(entitySource, NPC.position, new Vector2(Main.rand.Next(-6, 7), Main.rand.Next(-6, 7)), 13);
-					Gore.NewGore(entitySource, NPC.position, new Vector2(Main.rand.Next(-6, 7), Main.rand.Next(-6, 7)), 12);
-					Gore.NewGore(entitySource, NPC.position, new Vector2(Main.rand.Next(-6, 7), Main.rand.Next(-6, 7)), 11);
-				}
-			}
+				Utilities.SpawnDeathGore(NPC, 13, 12, 11);
 		}
 	}
 }

@@ -53,12 +53,20 @@ namespace TheConfectionRebirth.NPCs
 
 		public override void ModifyNPCLoot(NPCLoot npcLoot)
 		{
-			npcLoot.Add(ItemDropRule.NormalvsExpert(ItemID.Nazar, 100, 50));
+			Utilities.NPCLootAddRange(npcLoot,
+				ItemDropRule.NormalvsExpert
+				(
+					ItemID.Nazar,
+					chanceDenominatorInNormal: 100,
+					chanceDenominatorInExpert: 50
+				)
+			);
 		}
 
 		public override float SpawnChance(NPCSpawnInfo spawnInfo)
 		{
-			if (spawnInfo.Player.InModBiome(ModContent.GetInstance<ConfectionUndergroundBiome>()) && !spawnInfo.AnyInvasionActive())
+			if (spawnInfo.Player.InModBiome(ModContent.GetInstance<ConfectionUndergroundBiome>())
+				&& !spawnInfo.AnyInvasionActive())
 			{
 				return 0.08f;
 			}
@@ -68,9 +76,7 @@ namespace TheConfectionRebirth.NPCs
 		public override void HitEffect(int hitDirection, double damage)
 		{
 			if (Main.netMode == NetmodeID.Server)
-			{
 				return;
-			}
 
 			if (NPC.life <= 0)
 			{
@@ -78,9 +84,29 @@ namespace TheConfectionRebirth.NPCs
 
 				for (int i = 0; i < 3; i++)
 				{
-					Gore.NewGore(entitySource, NPC.position, new Vector2(Main.rand.Next(-6, 7), Main.rand.Next(-6, 7)), 13);
-					Gore.NewGore(entitySource, NPC.position, new Vector2(Main.rand.Next(-6, 7), Main.rand.Next(-6, 7)), 12);
-					Gore.NewGore(entitySource, NPC.position, new Vector2(Main.rand.Next(-6, 7), Main.rand.Next(-6, 7)), 11);
+					Gore.NewGore
+					(
+						entitySource,
+						NPC.position,
+						Velocity: new Vector2(Main.rand.Next(-6, 7), Main.rand.Next(-6, 7)),
+						Type: 13
+					 );
+
+					Gore.NewGore
+					(
+						entitySource,
+						NPC.position,
+						Velocity: new Vector2(Main.rand.Next(-6, 7), Main.rand.Next(-6, 7)),
+						Type: 12
+					 );
+
+					Gore.NewGore
+					(
+						entitySource,
+						NPC.position,
+						Velocity: new Vector2(Main.rand.Next(-6, 7), Main.rand.Next(-6, 7)),
+						Type: 11
+					);
 				}
 			}
 		}

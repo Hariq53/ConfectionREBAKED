@@ -54,13 +54,13 @@ namespace TheConfectionRebirth.NPCs
 		{
 			int num = NPC.life > 0 ? 1 : 5;
 			for (int k = 0; k < num; k++)
-			{
 				Dust.NewDust(NPC.position, NPC.width, NPC.height, ModContent.DustType<CritterBlood>());
-			}
 		}
+
 		public override float SpawnChance(NPCSpawnInfo spawnInfo)
 		{
-			if (spawnInfo.Player.InModBiome(ModContent.GetInstance<SandConfectionUndergroundBiome>()) && !spawnInfo.AnyInvasionActive())
+			if (spawnInfo.Player.InModBiome(ModContent.GetInstance<SandConfectionUndergroundBiome>())
+				&& !spawnInfo.AnyInvasionActive())
 			{
 				return 1f;
 			}
@@ -73,11 +73,11 @@ namespace TheConfectionRebirth.NPCs
 			if (NPC.frameCounter > 8.0)
 			{
 				NPC.frameCounter = 0.0;
+
 				NPC.frame.Y += frameHeight;
+
 				if (NPC.frame.Y > frameHeight * 2)
-				{
 					NPC.frame.Y = 0;
-				}
 			}
 		}
 	}

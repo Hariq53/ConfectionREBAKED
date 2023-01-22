@@ -2,8 +2,7 @@
 using ReLogic.Content;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Diagnostics.CodeAnalysis;
+using System.Collections.ObjectModel;
 using System.Linq;
 using Terraria;
 using Terraria.ModLoader;
@@ -16,33 +15,31 @@ namespace TheConfectionRebirth.NPCs
 	/// <typeparam name="T">The type of the NPC desired to be managed</typeparam>
 	static class VariationsManager<T> where T : ModNPC
 	{
-		private static readonly Dictionary<Type, List<NPCVariation>> _db = new();
+		private static readonly Dictionary<Type, VariationDBEntry> _db = new();
 
-		public static void AddVariation(NPCVariation variation)
+		public static void AddVariation(NPCVariation variation) => Entry.AddVariation(variation);
+
+		public static void AddVariationRange(params NPCVariation[] variations)
 		{
-			List<NPCVariation> variationsList;
-
-			if (!_db.TryGetValue(typeof(T), out variationsList!))
-			{
-				variationsList = new();
-				_db.Add(typeof(T), variationsList);
-			}
-			/*
-			 * At this point variationsList will either be a new list
-			 * or the one that already existed in the dictionary (outputted by TryGetValue)
-			 */
-
-			variationsList.Add(variation);
+			foreach (var variation in variations)
+				AddVariation(variation);
 		}
 
-		public static List<NPCVariation> AllVariations
+		private static VariationDBEntry Entry
 		{
 			get
 			{
-				_db.TryGetValue(typeof(T), out var variationsList);
-				return variationsList ?? new();
+				if (!_db.TryGetValue(typeof(T), out var dbEntry))
+				{
+					dbEntry = new();
+					_db.Add(typeof(T), dbEntry);
+				}
+
+				return dbEntry;
 			}
 		}
+
+		public static List<NPCVariation> AllVariations => Entry.Variations.ToList();
 
 		/// <summary>
 		/// Shorthand for AllVariations.Count
@@ -53,10 +50,15 @@ namespace TheConfectionRebirth.NPCs
 		{
 			get
 			{
-				var variations = AllVariations;
-				return (from variation in variations
-					   where variation.ConditionIsMet
-					   select variation).ToList();
+				var dbEntry = Entry;
+
+				// If all the variations don't have any condition skip the LINQ query
+				if (dbEntry._variations.Count == dbEntry._unconditionalVariations.Count)
+					return dbEntry.UnconditionalVariations.ToList();
+
+				return (from variation in Entry.Variations
+						where variation.ConditionIsMet
+				        select variation).ToList();
 			}
 		}
 
@@ -65,7 +67,7 @@ namespace TheConfectionRebirth.NPCs
 		/// is met at the moment of the method call
 		/// </summary>
 		/// <param name="index">A unique number identifying the picked variation, will be -1 in all
-		/// cases in which a valid variation can't be returned</param>
+		/// cases where valid variation can't be returned</param>
 		/// <returns>An NPCVariation object containing information about the drawn variation,
 		/// null in every case where no variations are available (e.g. when none have their
 		/// condition satisfied)</returns>
@@ -98,6 +100,50 @@ namespace TheConfectionRebirth.NPCs
 		}
 
 		public static void ClearVariations() => _db.Remove(typeof(T));
+
+		/// <summary>
+		/// Helper struct to speed up the process of variations retrieving
+		/// </summary>
+		private readonly struct VariationDBEntry
+		{
+			internal readonly List<NPCVariation> _variations = new();
+
+			public ReadOnlyCollection<NPCVariation> Variations => _variations.AsReadOnly();
+
+			internal readonly List<NPCVariation> _unconditionalVariations = new();
+
+			public ReadOnlyCollection<NPCVariation> UnconditionalVariations
+				=> _unconditionalVariations.AsReadOnly();
+
+			public VariationDBEntry()
+			{
+				_variations = new();
+				_unconditionalVariations = new();
+			}
+
+			public void AddVariation(NPCVariation variation)
+			{
+				_variations.Add(variation);
+
+				if (variation.Unconditional)
+					_unconditionalVariations.Add(variation);
+			}
+
+			public override int GetHashCode() => Variations.GetHashCode();
+
+			public override bool Equals(object? obj)
+			{
+				return obj is VariationDBEntry entry &&
+					   EqualityComparer<List<NPCVariation>>.Default.Equals(_variations, entry._variations);
+			}
+
+			public static bool operator ==(VariationDBEntry left, VariationDBEntry right)
+				=> left.Equals(right);
+
+			public static bool operator !=(VariationDBEntry left, VariationDBEntry right)
+				=> !(left == right);
+		}
+
 	}
 
 	public class NPCVariation
@@ -106,7 +152,7 @@ namespace TheConfectionRebirth.NPCs
 
 		public Asset<Texture2D> Texture { get; init; }
 
-		public Func<bool> Condition { get; init; } = () => true;
+		public Func<bool>? Condition { get; init; }
 
 		public NPCVariation(string name, Asset<Texture2D> texture)
 		{
@@ -121,8 +167,13 @@ namespace TheConfectionRebirth.NPCs
 		}
 
 		/// <summary>
-		/// Shorthand for .Condition, with incorporated null-checking of the condition itself
+		/// Shorthand for .Condition() with incorporated null-checking of the condition itself
 		/// </summary>
 		public bool ConditionIsMet => Condition?.Invoke() ?? true;
+
+		/// <summary>
+		/// Shorthand for .Condition is null
+		/// </summary>
+		public bool Unconditional => Condition is null;
 	}
 }

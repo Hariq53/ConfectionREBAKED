@@ -51,17 +51,14 @@ namespace TheConfectionRebirth.NPCs
 		private const float projectileSpeed = 11f; // How fast the stars travel toward the target player
 		#endregion
 
-
-		public int[] starProjectiles = new int[numberOfStars];
+		public int[] StarProjectiles { get; private set; } = new int[numberOfStars];
 		private static readonly int[] starRange;
 
 		static IcecreamGal()
 		{
 			starRange = new int[numberOfStars];
 			for (int i = 0; i < numberOfStars; i++)
-			{
 				starRange[i] = i;
-			}
 		}
 
 		public override void SetStaticDefaults()
@@ -95,7 +92,7 @@ namespace TheConfectionRebirth.NPCs
 			NPC.ai[1] = -1f; // Pause the star summoning animation
 			for (int i = 0; i < numberOfStars; i++)
 			{
-				starProjectiles[i] = -1;
+				StarProjectiles[i] = -1;
 			}
 		}
 
@@ -109,12 +106,17 @@ namespace TheConfectionRebirth.NPCs
 
 		public override void ModifyNPCLoot(NPCLoot npcLoot)
 		{
-			npcLoot.Add(new CommonDrop(Mod.Find<ModItem>("SoulofDelight").Type,
-				amountDroppedMinimum: 3,
-				amountDroppedMaximum: 5,
-				chanceNumerator: 1,
-				chanceDenominator: 1
-			));
+			npcLoot.Add
+			(
+				new CommonDrop
+				(
+					itemId: Mod.Find<ModItem>("SoulofDelight").Type,
+					amountDroppedMinimum: 3,
+					amountDroppedMaximum: 5,
+					chanceNumerator: 1,
+					chanceDenominator: 1
+				)
+			);
 		}
 
 		public override void FindFrame(int frameHeight)
@@ -124,7 +126,9 @@ namespace TheConfectionRebirth.NPCs
 
 		public override float SpawnChance(NPCSpawnInfo spawnInfo)
 		{
-			if (spawnInfo.Player.ZoneRockLayerHeight && spawnInfo.Player.InModBiome(ModContent.GetInstance<IceConfectionUndergroundBiome>()) && !spawnInfo.AnyInvasionActive())
+			if (spawnInfo.Player.ZoneRockLayerHeight
+				&& spawnInfo.Player.InModBiome(ModContent.GetInstance<IceConfectionUndergroundBiome>())
+				&& !spawnInfo.AnyInvasionActive())
 			{
 				return 0.01f;
 			}
@@ -134,20 +138,11 @@ namespace TheConfectionRebirth.NPCs
 		public override void HitEffect(int hitDirection, double damage)
 		{
 			if (Main.netMode == NetmodeID.Server)
-			{
 				return;
-			}
 
 			if (NPC.life <= 0)
 			{
-				var entitySource = NPC.GetSource_Death();
-
-				for (int i = 0; i < 3; i++)
-				{
-					Gore.NewGore(entitySource, NPC.position, new Vector2(Main.rand.Next(-6, 7), Main.rand.Next(-6, 7)), 13);
-					Gore.NewGore(entitySource, NPC.position, new Vector2(Main.rand.Next(-6, 7), Main.rand.Next(-6, 7)), 12);
-					Gore.NewGore(entitySource, NPC.position, new Vector2(Main.rand.Next(-6, 7), Main.rand.Next(-6, 7)), 11);
-				}
+				Utilities.SpawnDeathGore(NPC, 13, 12, 11);
 			}
 		}
 
@@ -161,15 +156,18 @@ namespace TheConfectionRebirth.NPCs
 			PerformAttacks();
 		}
 
+		private Player? TargetPlayer => NPC.target == -1 ? null : Main.player[NPC.target];
+
 		private void SearchForPlayerTarget()
 		{
 			if (NPC.target >= Main.player.Length)
 			{
-				Player targetPlayer = null;
 				for (int i = 0; i < Main.player.Length; i++)
 				{
-					targetPlayer = Main.player[i];
-					if (targetPlayer != null && targetPlayer.active && targetPlayer.statLife > 0 && (targetPlayer.Center - NPC.Center).LengthSquared() <= 256f * searchDistance * searchDistance)
+					if (TargetPlayer != null
+						&& TargetPlayer.active
+						&& TargetPlayer.statLife > 0
+						&& (TargetPlayer.Center - NPC.Center).LengthSquared() <= 256f * searchDistance * searchDistance)
 					{
 						NPC.target = i;
 						return;
@@ -182,14 +180,15 @@ namespace TheConfectionRebirth.NPCs
 		{
 			if (NPC.target < Main.player.Length)
 			{
-				Player targetPlayer = Main.player[NPC.target];
-				if (targetPlayer == null || !targetPlayer.active || targetPlayer.statLife <= 0)
+				if (TargetPlayer == null
+					|| !TargetPlayer.active
+					|| TargetPlayer.statLife <= 0)
 				{
 					NPC.target = 256;
 				}
 				else
 				{
-					float dx = targetPlayer.Center.X - NPC.Center.X;
+					float dx = TargetPlayer.Center.X - NPC.Center.X;
 					float hdist = MathF.Abs(dx); // horizontal distance
 					float speed = MathF.Min(maxMoveSpeed, hdist / 20f);
 					NPC.velocity.X += (dx > 0f ? 1 : -1) * acceleration;
@@ -203,7 +202,7 @@ namespace TheConfectionRebirth.NPCs
 						{
 							NPC.velocity.Y = -jumpForce;
 							// Chance to summon stars
-							if (NPC.ai[1] == -1f && Main.rand.Next(averageNumberOfJumpsPerSummon) == 0)
+							if (NPC.ai[1] == -1f && Main.rand.NextBool(averageNumberOfJumpsPerSummon))
 							{
 								NPC.ai[1] = 0f; // Triggers the animation
 							}
@@ -236,9 +235,9 @@ namespace TheConfectionRebirth.NPCs
 		{
 			if (NPC.ai[1] >= 0f && NPC.ai[1] < numberOfStars)
 			{ // ai value increments by one only when a star has finished the summoning animation
-				if (starProjectiles[(int)NPC.ai[1]] == -1)
+				if (StarProjectiles[(int)NPC.ai[1]] == -1)
 				{
-					starProjectiles[(int)NPC.ai[1]] = Projectile.NewProjectile(
+					StarProjectiles[(int)NPC.ai[1]] = Projectile.NewProjectile(
 						spawnSource: NPC.GetSource_None(),
 						position: NPC.Center - (Vector2.One * 5f),
 						velocity: Vector2.Zero,
@@ -254,8 +253,8 @@ namespace TheConfectionRebirth.NPCs
 		{
 			for (int i = 0; i < numberOfStars; i++)
 			{
-				if (starProjectiles[i] == -1) continue;
-				Projectile star = Main.projectile[starProjectiles[i]];
+				if (StarProjectiles[i] == -1) continue;
+				Projectile star = Main.projectile[StarProjectiles[i]];
 				float t = ((float)Main.time * rotationSpeed) + (i * MathF.Tau / numberOfStars);
 				float nextRadius;
 				if (star.ai[1] == 1f)
@@ -281,13 +280,12 @@ namespace TheConfectionRebirth.NPCs
 		{
 			if (NPC.ai[1] == numberOfStars)
 			{
-				Player targetPlayer = Main.player[NPC.target];
-				int[] remaining = starRange.Where(i => starProjectiles[i] != -1).ToArray();
+				int[] remaining = starRange.Where(i => StarProjectiles[i] != -1).ToArray();
 				int i = remaining[Main.rand.Next(remaining.Length)];
-				Projectile star = Main.projectile[starProjectiles[i]];
-				Vector2 delta = targetPlayer.Center - star.Center;
+				Projectile star = Main.projectile[StarProjectiles[i]];
+				Vector2 delta = TargetPlayer!.Center - star.Center;
 				star.velocity = delta * projectileSpeed / delta.Length();
-				starProjectiles[i] = -1;
+				StarProjectiles[i] = -1;
 				Mod.Logger.Info("Shot star #" + i);
 				// Basically what happens above is that stars are selected randomly from the circle to be shot toward the target player
 				if (remaining.Length == 1)

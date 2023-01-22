@@ -36,15 +36,16 @@ namespace TheConfectionRebirth.NPCs
 
 		public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)
 		{
-			bestiaryEntry.Info.AddRange(new IBestiaryInfoElement[] {
-
+			bestiaryEntry.Info.AddRange(new IBestiaryInfoElement[]
+			{
 				new FlavorTextBestiaryInfoElement("Mods.TheConfectionRebirth.Bestiary.BigMimicConfection")
 			});
 		}
 
 		public override float SpawnChance(NPCSpawnInfo spawnInfo)
 		{
-			if (spawnInfo.Player.InModBiome(ModContent.GetInstance<ConfectionUndergroundBiome>()) && !spawnInfo.AnyInvasionActive())
+			if (spawnInfo.Player.InModBiome(ModContent.GetInstance<ConfectionUndergroundBiome>())
+			    && !spawnInfo.AnyInvasionActive())
 			{
 				return 0.01f;
 			}
@@ -53,27 +54,67 @@ namespace TheConfectionRebirth.NPCs
 
 		public override void ModifyNPCLoot(NPCLoot npcLoot)
 		{
-			npcLoot.Add(ItemDropRule.OneFromOptionsNotScalingWithLuck(1, ModContent.ItemType<CookieCrumbler>(), ModContent.ItemType<SweetTooth>(), ModContent.ItemType<SweetHook>(), ModContent.ItemType<CreamSpray>()));
-			npcLoot.Add(ItemDropRule.Common(ItemID.GreaterHealingPotion, 1, 5, 10));
-			npcLoot.Add(ItemDropRule.Common(ItemID.GreaterManaPotion, 1, 5, 15));
+			Utilities.NPCLootAddRange(npcLoot,
+				ItemDropRule.OneFromOptionsNotScalingWithLuck
+				(
+					chanceDenominator: 1,
+					ModContent.ItemType<CookieCrumbler>(),
+					ModContent.ItemType<SweetTooth>(),
+					ModContent.ItemType<SweetHook>(),
+					ModContent.ItemType<CreamSpray>()
+				),
+				ItemDropRule.Common
+				(
+					ItemID.GreaterHealingPotion,
+					chanceDenominator: 1,
+					minimumDropped: 5,
+					maximumDropped: 10
+				),
+				ItemDropRule.Common
+				(
+					ItemID.GreaterManaPotion,
+					chanceDenominator: 1,
+					minimumDropped: 5,
+					maximumDropped: 15
+				)
+			);
 		}
 
 		public override void HitEffect(int hitDirection, double damage)
 		{
 			if (Main.netMode == NetmodeID.Server)
-			{
 				return;
-			}
 
 			if (NPC.life <= 0)
 			{
+				// Repeated code
 				var entitySource = NPC.GetSource_Death();
 
 				for (int i = 0; i < 3; i++)
 				{
-					Gore.NewGore(entitySource, NPC.position, new Vector2(Main.rand.Next(-6, 7), Main.rand.Next(-6, 7)), 13);
-					Gore.NewGore(entitySource, NPC.position, new Vector2(Main.rand.Next(-6, 7), Main.rand.Next(-6, 7)), 12);
-					Gore.NewGore(entitySource, NPC.position, new Vector2(Main.rand.Next(-6, 7), Main.rand.Next(-6, 7)), 11);
+					Gore.NewGore
+					(
+						entitySource,
+						NPC.position,
+						Velocity: new Vector2(Main.rand.Next(-6, 7), Main.rand.Next(-6, 7)),
+						Type: 13
+					 );
+
+					Gore.NewGore
+					(
+						entitySource,
+						NPC.position,
+						Velocity: new Vector2(Main.rand.Next(-6, 7), Main.rand.Next(-6, 7)),
+						Type: 12
+					 );
+
+					Gore.NewGore
+					(
+						entitySource,
+						NPC.position,
+						Velocity: new Vector2(Main.rand.Next(-6, 7), Main.rand.Next(-6, 7)),
+						Type: 11
+					);
 				}
 			}
 		}
